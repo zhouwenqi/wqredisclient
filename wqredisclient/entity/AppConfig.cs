@@ -11,9 +11,10 @@ namespace wqredisclient.entity
     /// </summary>
     public class AppConfig
     {
+        private List<RedisConnection> redisConnections = new List<RedisConnection>();
         /// <summary>
         /// redis connections
         /// </summary>
-        public List<RedisConnection> RedisConnections { get; set; }
+        public List<RedisConnection> RedisConnections { get { return this.redisConnections; }set { this.redisConnections = value; } }
     }
 }

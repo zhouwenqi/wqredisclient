@@ -3,6 +3,7 @@ using System.Windows;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using wqredisclient.entity;
+using wqredisclient.common;
 
 namespace wqredisclient
 {
@@ -21,11 +22,11 @@ namespace wqredisclient
         private log4net.ILog log = log4net.LogManager.GetLogger("App.xaml.cs");
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            base.OnStartup(e);
             rooPath = AppDomain.CurrentDomain.BaseDirectory;
             jsonSettings = new JsonSerializerSettings();
             jsonSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
+            ConfigUtils.loadAppConfig();
         }
     }
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:wqredisclient.window"
         xmlns:wq="clr-namespace:wqredisclient.components"
+        xmlns:et="clr-namespace:wqredisclient.entity"
         mc:Ignorable="d" Loaded="Window_Loaded"
         Title="MainWindow" Height="300" Width="300" Icon="/wqredisclient;component/wqredisclient.ico">
     <Grid SnapsToDevicePixels="True">
@@ -26,50 +27,72 @@
             <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgDelete}" />
             <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgSetup}" />
         </StackPanel>
-        <TreeView Grid.Row="1">
-            <TreeViewItem Header="desktop visual studio interop automation types">
-                <TreeViewItem Header="db-0" />
-                <TreeViewItem Header="db-1" />
-                <TreeViewItem Header="db-2" />
-                <TreeViewItem Header="db-2" />
-                <TreeViewItem Header="db-3" />
-                <TreeViewItem Header="db-4" />
-                <TreeViewItem Header="db-5" />
-            </TreeViewItem>
-            <TreeViewItem Header="192.168.3.220">
-                <TreeViewItem Header="db-0" />
-                <TreeViewItem Header="db-1" />
-                <TreeViewItem Header="db-2" />
-                <TreeViewItem Header="db-2" />
-                <TreeViewItem Header="db-3" />
-                <TreeViewItem Header="db-4" />
-                <TreeViewItem Header="db-5" />
-            </TreeViewItem>
-            <TreeViewItem Header="localhost">
-                <TreeViewItem Header="db-0" />
-                <TreeViewItem Header="db-1" />
-                <TreeViewItem Header="db-2" />
-                <TreeViewItem Header="db-2" />
-                <TreeViewItem Header="db-3" />
-                <TreeViewItem Header="db-4" />
-                <TreeViewItem Header="db-5" />
-            </TreeViewItem>
-            <TreeViewItem Header="mysql">
-                <TreeViewItem Header="db-0" />
-                <TreeViewItem Header="db-1" />
-                <TreeViewItem Header="db-2" />
-                <TreeViewItem Header="db-2" />
-                <TreeViewItem Header="db-3" />
-                <TreeViewItem Header="db-4" />
-                <TreeViewItem Header="db-5" />
-                <TreeViewItem Header="db-6" />
-                <TreeViewItem Header="db-7" />
-                <TreeViewItem Header="db-8" />
-                <TreeViewItem Header="db-9" />
-                <TreeViewItem Header="db-10" />
-                <TreeViewItem Header="db-11" />
-                <TreeViewItem Header="db-12" />
-            </TreeViewItem>
-        </TreeView>
+        <Grid Grid.Row="1" Background="#f7f9fc">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TreeView Grid.Column="0" x:Name="redisServerBox">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type et:RedisConnection}" ItemsSource="{Binding Server.Databases}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Margin="0 0 8 0" Width="14" Height="14" Fill="{StaticResource primaryBrush}" Data="{StaticResource svgRedis}" Stretch="Fill" />
+                            <TextBlock Text="{Binding Server.Name}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type et:RedisDatabase}">
+                        <StackPanel Margin="10 0 0 0">
+                            <TextBlock Text="{Binding Name}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+                <TreeViewItem Header="desktop visual studio interop automation types">
+                    <TreeViewItem Header="db-0" />
+                    <TreeViewItem Header="db-1" />
+                    <TreeViewItem Header="db-2" />
+                    <TreeViewItem Header="db-2" />
+                    <TreeViewItem Header="db-3" />
+                    <TreeViewItem Header="db-4" />
+                    <TreeViewItem Header="db-5" />
+                </TreeViewItem>
+                <TreeViewItem Header="192.168.3.220">
+                    <TreeViewItem Header="db-0" />
+                    <TreeViewItem Header="db-1" />
+                    <TreeViewItem Header="db-2" />
+                    <TreeViewItem Header="db-2" />
+                    <TreeViewItem Header="db-3" />
+                    <TreeViewItem Header="db-4" />
+                    <TreeViewItem Header="db-5" />
+                </TreeViewItem>
+                <TreeViewItem Header="localhost">
+                    <TreeViewItem Header="db-0" />
+                    <TreeViewItem Header="db-1" />
+                    <TreeViewItem Header="db-2" />
+                    <TreeViewItem Header="db-2" />
+                    <TreeViewItem Header="db-3" />
+                    <TreeViewItem Header="db-4" />
+                    <TreeViewItem Header="db-5" />
+                </TreeViewItem>
+                <TreeViewItem Header="mysql">
+                    <TreeViewItem Header="db-0" />
+                    <TreeViewItem Header="db-1" />
+                    <TreeViewItem Header="db-2" />
+                    <TreeViewItem Header="db-2" />
+                    <TreeViewItem Header="db-3" />
+                    <TreeViewItem Header="db-4" />
+                    <TreeViewItem Header="db-5" />
+                    <TreeViewItem Header="db-6" />
+                    <TreeViewItem Header="db-7" />
+                    <TreeViewItem Header="db-8" />
+                    <TreeViewItem Header="db-9" />
+                    <TreeViewItem Header="db-10" />
+                    <TreeViewItem Header="db-11" />
+                    <TreeViewItem Header="db-12" />
+                </TreeViewItem>
+            </TreeView>
+        </Grid>
     </Grid>
 </Window>

@@ -11,6 +11,7 @@ namespace wqredisclient.entity
     /// </summary>
     public class RedisServer
     {
+        private List<RedisDatabase> databases = new List<RedisDatabase>();
         /// <summary>
         /// Name
         /// </summary>
@@ -35,5 +36,12 @@ namespace wqredisclient.entity
         /// Execution Timeout
         /// </summary>
         public int ExecutionTimeOut { get; set; }
+        /// <summary>
+        /// Database list
+        /// </summary>
+        public List<RedisDatabase> Databases {
+            get { return this.databases; }
+            set { this.databases = value; }
+        }
     }
 }
