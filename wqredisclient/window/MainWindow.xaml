@@ -4,9 +4,72 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:wqredisclient.window"
+        xmlns:wq="clr-namespace:wqredisclient.components"
         mc:Ignorable="d" Loaded="Window_Loaded"
         Title="MainWindow" Height="300" Width="300" Icon="/wqredisclient;component/wqredisclient.ico">
-    <Grid>
-        <Button Click="Button_Click" Content="{DynamicResource mConnectionButtonText}"></Button>
+    <Grid SnapsToDevicePixels="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border Background="{StaticResource primaryBrush}" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" />
+        <StackPanel Grid.ColumnSpan="2" Height="16" Orientation="Horizontal" Margin="10 0">
+            <wq:TopButton Width="16" Height="16" Margin="10 0" Icon="{StaticResource svgServerAdd}" />
+            <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgImport}" />
+            <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgExport}" />
+            <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgRefresh}" />
+            <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgSave}" />
+            <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgDelete}" />
+            <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgSetup}" />
+        </StackPanel>
+        <TreeView Grid.Row="1">
+            <TreeViewItem Header="desktop visual studio interop automation types">
+                <TreeViewItem Header="db-0" />
+                <TreeViewItem Header="db-1" />
+                <TreeViewItem Header="db-2" />
+                <TreeViewItem Header="db-2" />
+                <TreeViewItem Header="db-3" />
+                <TreeViewItem Header="db-4" />
+                <TreeViewItem Header="db-5" />
+            </TreeViewItem>
+            <TreeViewItem Header="192.168.3.220">
+                <TreeViewItem Header="db-0" />
+                <TreeViewItem Header="db-1" />
+                <TreeViewItem Header="db-2" />
+                <TreeViewItem Header="db-2" />
+                <TreeViewItem Header="db-3" />
+                <TreeViewItem Header="db-4" />
+                <TreeViewItem Header="db-5" />
+            </TreeViewItem>
+            <TreeViewItem Header="localhost">
+                <TreeViewItem Header="db-0" />
+                <TreeViewItem Header="db-1" />
+                <TreeViewItem Header="db-2" />
+                <TreeViewItem Header="db-2" />
+                <TreeViewItem Header="db-3" />
+                <TreeViewItem Header="db-4" />
+                <TreeViewItem Header="db-5" />
+            </TreeViewItem>
+            <TreeViewItem Header="mysql">
+                <TreeViewItem Header="db-0" />
+                <TreeViewItem Header="db-1" />
+                <TreeViewItem Header="db-2" />
+                <TreeViewItem Header="db-2" />
+                <TreeViewItem Header="db-3" />
+                <TreeViewItem Header="db-4" />
+                <TreeViewItem Header="db-5" />
+                <TreeViewItem Header="db-6" />
+                <TreeViewItem Header="db-7" />
+                <TreeViewItem Header="db-8" />
+                <TreeViewItem Header="db-9" />
+                <TreeViewItem Header="db-10" />
+                <TreeViewItem Header="db-11" />
+                <TreeViewItem Header="db-12" />
+            </TreeViewItem>
+        </TreeView>
     </Grid>
 </Window>
