@@ -6,8 +6,14 @@
         xmlns:local="clr-namespace:wqredisclient.window"
         xmlns:wq="clr-namespace:wqredisclient.components"
         xmlns:et="clr-namespace:wqredisclient.entity"
+        xmlns:ct="clr-namespace:wqredisclient.convert"
         mc:Ignorable="d" Loaded="Window_Loaded"
         Title="MainWindow" Height="300" Width="300" Icon="/wqredisclient;component/wqredisclient.ico">
+    <Window.Resources>
+        <ct:VisibleConvert x:Key="visibleConvert" />
+        <ct:CollapsedConvert x:Key="collapsedConvert" />
+        <ct:FillConvert x:Key="fillConvert" />
+    </Window.Resources>
     <Grid SnapsToDevicePixels="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -27,71 +33,31 @@
             <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgDelete}" />
             <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgSetup}" />
         </StackPanel>
-        <Grid Grid.Row="1" Background="#f7f9fc">
+        <Grid Grid.Row="1" Background="{DynamicResource darkBackgroundBrush}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition MinWidth="200" Width="200" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TreeView Grid.Column="0" x:Name="redisServerBox">
+            <TreeView TreeView.SelectedItemChanged="redisServerBox_SelectedItemChanged" Grid.Column="0" x:Name="redisServerBox">
                 <TreeView.Resources>
-                    <HierarchicalDataTemplate DataType="{x:Type et:RedisConnection}" ItemsSource="{Binding Server.Databases}">
+                    <HierarchicalDataTemplate DataType="{x:Type et:RedisServer}" ItemsSource="{Binding Databases}">
                         <StackPanel Orientation="Horizontal">
-                            <Path Margin="0 0 8 0" Width="14" Height="14" Fill="{StaticResource primaryBrush}" Data="{StaticResource svgRedis}" Stretch="Fill" />
-                            <TextBlock Text="{Binding Server.Name}" />
+                            <Path Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource collapsedConvert}}" Width="14"  Height="14" Fill="{Binding Path=IsConnectioned,Converter={StaticResource fillConvert}}" Data="{StaticResource svgRedis}" Stretch="Fill" />
+                            <Path Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource visibleConvert}}"  Width="14" Height="14" Fill="{DynamicResource drakBrush}" Data="{StaticResource svgLoading}" Stretch="Fill" />
+                            <TextBlock Text="{Binding Connection.Name}" />
+                            <TextBlock Text="{Binding IsConnectioned}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type et:RedisDatabase}">
-                        <StackPanel Margin="10 0 0 0">
+                        <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                            <Path Margin="0 0 8 0" Width="14" Height="14" Fill="{DynamicResource disableBrush}" Data="{StaticResource svgDatabase}" Stretch="Fill" />
                             <TextBlock Text="{Binding Name}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
-                </TreeView.Resources>
-                <TreeViewItem Header="desktop visual studio interop automation types">
-                    <TreeViewItem Header="db-0" />
-                    <TreeViewItem Header="db-1" />
-                    <TreeViewItem Header="db-2" />
-                    <TreeViewItem Header="db-2" />
-                    <TreeViewItem Header="db-3" />
-                    <TreeViewItem Header="db-4" />
-                    <TreeViewItem Header="db-5" />
-                </TreeViewItem>
-                <TreeViewItem Header="192.168.3.220">
-                    <TreeViewItem Header="db-0" />
-                    <TreeViewItem Header="db-1" />
-                    <TreeViewItem Header="db-2" />
-                    <TreeViewItem Header="db-2" />
-                    <TreeViewItem Header="db-3" />
-                    <TreeViewItem Header="db-4" />
-                    <TreeViewItem Header="db-5" />
-                </TreeViewItem>
-                <TreeViewItem Header="localhost">
-                    <TreeViewItem Header="db-0" />
-                    <TreeViewItem Header="db-1" />
-                    <TreeViewItem Header="db-2" />
-                    <TreeViewItem Header="db-2" />
-                    <TreeViewItem Header="db-3" />
-                    <TreeViewItem Header="db-4" />
-                    <TreeViewItem Header="db-5" />
-                </TreeViewItem>
-                <TreeViewItem Header="mysql">
-                    <TreeViewItem Header="db-0" />
-                    <TreeViewItem Header="db-1" />
-                    <TreeViewItem Header="db-2" />
-                    <TreeViewItem Header="db-2" />
-                    <TreeViewItem Header="db-3" />
-                    <TreeViewItem Header="db-4" />
-                    <TreeViewItem Header="db-5" />
-                    <TreeViewItem Header="db-6" />
-                    <TreeViewItem Header="db-7" />
-                    <TreeViewItem Header="db-8" />
-                    <TreeViewItem Header="db-9" />
-                    <TreeViewItem Header="db-10" />
-                    <TreeViewItem Header="db-11" />
-                    <TreeViewItem Header="db-12" />
-                </TreeViewItem>
+                </TreeView.Resources>                
             </TreeView>
         </Grid>
     </Grid>

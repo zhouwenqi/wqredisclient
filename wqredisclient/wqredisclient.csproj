@@ -69,9 +69,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="common\ConfigUtils.cs" />
-    <Compile Include="components\ServerListBox.xaml.cs">
-      <DependentUpon>ServerListBox.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="common\RedisUtils.cs" />
+    <Compile Include="convert\FillConvert.cs" />
+    <Compile Include="convert\VisibleConvert.cs" />
+    <Compile Include="convert\CollapsedConvert.cs" />
     <Compile Include="entity\AppConfig.cs" />
     <Compile Include="entity\RedisConnection.cs" />
     <Compile Include="entity\RedisDatabase.cs" />
@@ -86,10 +87,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="components\ServerListBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="components\TopButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

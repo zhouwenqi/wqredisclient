@@ -11,10 +11,54 @@ namespace wqredisclient.entity
     /// </summary>
     public class RedisConnection
     {
+        private bool isUseSSL = false;
+        private bool isUseSSH = false;
+        private int connectionTimeOut = 60000;
+        private int executionTimeOut = 60000;
         /// <summary>
-        /// redis server info
+        /// Name
         /// </summary>
-        public RedisServer Server { set; get; }
+        public string Name { get; set; }
+        /// <summary>
+        /// Host
+        /// </summary>
+        public string Host { get; set; }
+        /// <summary>
+        /// Port
+        /// </summary>
+        public int Port { get; set; }
+        /// <summary>
+        /// Auth
+        /// </summary>
+        public string Auth { get; set; }
+        /// <summary>
+        /// Connection Timeout
+        /// </summary>
+        public int ConnectionTimeOut
+        {
+            get
+            {
+                return connectionTimeOut;
+            }
+            set
+            {
+                connectionTimeOut = value;
+            }
+        }
+        /// <summary>
+        /// Execution Timeout
+        /// </summary>
+        public int ExecutionTimeOut
+        {
+            get
+            {
+                return executionTimeOut;
+            }
+            set
+            {
+                executionTimeOut = value;
+            }
+        }        
         /// <summary>
         /// ssl
         /// </summary>
@@ -22,7 +66,16 @@ namespace wqredisclient.entity
         /// <summary>
         /// use protocol SSL
         /// </summary>
-        public bool IsUseSSL { set; get; }
+        public bool IsUseSSL {
+            get
+            {
+                return isUseSSL;
+            }
+            set
+            {
+                isUseSSL = value;
+            }
+        }
         /// <summary>
         /// ssh
         /// </summary>
@@ -30,8 +83,16 @@ namespace wqredisclient.entity
         /// <summary>
         /// use protocol SSH
         /// </summary>
-        public bool IsUseSSH { set; get; }
-
+        public bool IsUseSSH {
+            get
+            {
+                return isUseSSH;
+            }
+            set
+            {
+                isUseSSH = value;
+            }
+        }
     }
     public class RedisSSL
     {

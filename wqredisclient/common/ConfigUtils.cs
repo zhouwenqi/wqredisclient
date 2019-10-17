@@ -37,9 +37,6 @@ namespace wqredisclient.common
         }
         public static void saveConfig(AppConfig appConfig)
         {
-            appConfig.RedisConnections.ForEach((item) => {
-                item.Server.Databases.Clear();
-            });
             String jsonData = JsonConvert.SerializeObject(appConfig, App.jsonSettings);
             using (StreamWriter sw = new StreamWriter(configPath))
             {

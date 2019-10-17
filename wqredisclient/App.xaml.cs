@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -18,6 +21,8 @@ namespace wqredisclient
         public static string rooPath;
         // app config
         public static AppConfig config;
+        // RedisServer list
+        public static ObservableCollection<RedisServer> redisServers;
 
         private log4net.ILog log = log4net.LogManager.GetLogger("App.xaml.cs");
         private void Application_Startup(object sender, StartupEventArgs e)
@@ -25,7 +30,7 @@ namespace wqredisclient
             rooPath = AppDomain.CurrentDomain.BaseDirectory;
             jsonSettings = new JsonSerializerSettings();
             jsonSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
+            redisServers = new ObservableCollection<RedisServer>();
             ConfigUtils.loadAppConfig();
         }
     }

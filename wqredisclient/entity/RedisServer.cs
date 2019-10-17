@@ -3,45 +3,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace wqredisclient.entity
 {
     /// <summary>
     /// Redis Server
     /// </summary>
-    public class RedisServer
+    public class RedisServer : INotifyPropertyChanged
     {
+        private bool isConnectioning = false;
+        private bool isConnectioned = false;
         private List<RedisDatabase> databases = new List<RedisDatabase>();
-        /// <summary>
-        /// Name
-        /// </summary>
-        public string Name { get; set; }
-        /// <summary>
-        /// Host
-        /// </summary>
-        public string Host { get; set; }
-        /// <summary>
-        /// Port
-        /// </summary>
-        public int Port { get; set; }
-        /// <summary>
-        /// Auth
-        /// </summary>
-        public string Auth { get; set; } 
-        /// <summary>
-        /// Connection Timeout
-        /// </summary>
-        public int ConnectionTimeOut { get; set; }
-        /// <summary>
-        /// Execution Timeout
-        /// </summary>
-        public int ExecutionTimeOut { get; set; }
-        /// <summary>
-        /// Database list
-        /// </summary>
+        private CSRedis.RedisClient redisClient;
         public List<RedisDatabase> Databases {
             get { return this.databases; }
             set { this.databases = value; }
+        }
+        public RedisConnection Connection { get; set; }
+        public CSRedis.RedisClient RedisClient {
+            set { UpdateProperty(ref redisClient, value); }
+            get { return redisClient; }
+        }
+        public bool IsConnectioning
+        {
+            set { UpdateProperty(ref isConnectioning,value); }
+            get { return isConnectioning; }
+        }
+        public bool IsConnectioned
+        {
+            set { UpdateProperty(ref isConnectioned, value); }
+            get { return isConnectioned; }
+        }
+        private void UpdateProperty<T>(ref T properValue, T newValue, [CallerMemberName] string propertyName = "")
+        {
+            if (object.Equals(properValue, newValue))
+            {
+                return;
+            }
+            properValue = newValue;
+            OnPropertyChanged(propertyName);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName]string propertyName = "")
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }
