@@ -153,12 +153,20 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Grid Width="15" Height="13" Background="Transparent">
-                        <Path x:Name="ExpandPath" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,1,1,1" Fill="{StaticResource GlyphBrush}" Data="M 4 0 L 8 4 L 4 8 Z"/>
+                    <Grid Width="10" Height="7" Background="Transparent">
+                        <Path Stretch="Fill" RenderTransformOrigin="0.5 0.5" x:Name="ExpandPath" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,1,1,1" Fill="{StaticResource GlyphBrush}" Data="{StaticResource svgExpand}">
+                            <Path.RenderTransform>
+                                <RotateTransform Angle="-90" />
+                            </Path.RenderTransform>
+                        </Path>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="Data" TargetName="ExpandPath" Value="M 0 4 L 8 4 L 4 8 Z"/>
+                            <Setter Property="RenderTransform" TargetName="ExpandPath">
+                                <Setter.Value>
+                                    <RotateTransform Angle="0" />
+                                </Setter.Value>
+                            </Setter>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -175,20 +183,20 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
-                    <Grid>
+                    <Grid SnapsToDevicePixels="True">
                         <Grid.ColumnDefinitions>                            
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition MinWidth="19" Width="Auto" />
+                            <ColumnDefinition MinWidth="40" Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition />
-                        </Grid.RowDefinitions>                        
-                        <Border Name="Bd" Grid.Column="0" Padding="8 6" Grid.ColumnSpan="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
-                            <ContentPresenter x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                        </Grid.RowDefinitions>
+                        <Border Name="Bd" Grid.Column="0" Grid.ColumnSpan="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter Width="{TemplateBinding ActualWidth }" x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>                            
                         </Border>
                         <ToggleButton Grid.Column="1" x:Name="Expander" Style="{StaticResource ExpandCollapseToggleStyle}" IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
-                        <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
+                        <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />                        
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsExpanded" Value="false">
@@ -203,14 +211,14 @@
                                 <Condition Property="Width" Value="Auto"/>
                             </MultiTrigger.Conditions>
                             <Setter TargetName="PART_Header" Property="MinWidth" Value="75"/>
-                        </MultiTrigger>
+                        </MultiTrigger>                        
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="HasHeader" Value="false"/>
                                 <Condition Property="Height" Value="Auto"/>
                             </MultiTrigger.Conditions>
                             <Setter TargetName="PART_Header" Property="MinHeight" Value="19"/>
-                        </MultiTrigger>
+                        </MultiTrigger>                        
                         <Trigger Property="IsSelected" Value="true">
                             <Setter TargetName="Bd" Property="Background" Value="{DynamicResource darkBackgroundBrush}" />
                             <Setter Property="Foreground" Value="{DynamicResource primaryBrush}" />
@@ -227,6 +235,44 @@
                             <Setter Property="Opacity" Value="0.5"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- TreeViewItem Border style -->
+    <Style x:Key="treeViewBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="10 6" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" Value="{DynamicResource lightBackgroundBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!-- loading -->
+    <Style TargetType="{x:Type wq:Loading}">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type wq:Loading}">
+                    <Grid>
+                        <Path Data="{StaticResource svgLoading}" Fill="{TemplateBinding Fill}" Stretch="Fill" RenderTransformOrigin="0.5 0.5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Path.RenderTransform>
+                                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="0" />
+                            </Path.RenderTransform>
+                            <Path.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <EventTrigger.Actions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0:0:4" Storyboard.TargetProperty="(RenderTransform).Angle" From="0" To="360" RepeatBehavior="Forever" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger.Actions>
+                                </EventTrigger>
+                            </Path.Triggers>
+                        </Path>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

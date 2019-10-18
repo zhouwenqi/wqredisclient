@@ -17,6 +17,11 @@ namespace wqredisclient.common
             redisServer.RedisClient = redisClient;
             App.redisServers.Add(redisServer);
         }
+        /// <summary>
+        /// get redis object
+        /// </summary>
+        /// <param name="redisClient"></param>
+        /// <returns></returns>
         public static RedisServer getRedisServer(RedisClient redisClient)
         {
             foreach(RedisServer redisServer in App.redisServers)
@@ -27,6 +32,20 @@ namespace wqredisclient.common
                 }
             }
             return null;
+        }
+        /// <summary>
+        /// database count
+        /// </summary>
+        /// <param name="redisClient"></param>
+        /// <returns></returns>
+        public static int getDatabasesCount(RedisClient redisClient)
+        {
+            Tuple<string, string>[] config = redisClient.ConfigGet("databases");
+            if(config == null || config.Length < 1)
+            {
+                return 0;
+            }
+            return Convert.ToInt16(config[0].Item2);
         }
     }
 }

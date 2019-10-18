@@ -21,8 +21,8 @@ namespace wqredisclient.convert
             }
             bool isSuccess = (bool)value;
             SolidColorBrush primaryBrush = (SolidColorBrush)Application.Current.FindResource("primaryBrush");
-            SolidColorBrush drakBrush = (SolidColorBrush)Application.Current.FindResource("drakBrush");
-            return isSuccess ? primaryBrush : drakBrush;
+            SolidColorBrush icoLightBrush = (SolidColorBrush)Application.Current.FindResource("icoNormalBrush");
+            return isSuccess ? primaryBrush : icoLightBrush;
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

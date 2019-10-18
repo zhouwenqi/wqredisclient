@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 
 namespace wqredisclient.entity
 {
@@ -15,11 +16,11 @@ namespace wqredisclient.entity
     {
         private bool isConnectioning = false;
         private bool isConnectioned = false;
-        private List<RedisDatabase> databases = new List<RedisDatabase>();
+        private ObservableCollection<RedisDatabase> databases = new ObservableCollection<RedisDatabase>();
         private CSRedis.RedisClient redisClient;
-        public List<RedisDatabase> Databases {
+        public ObservableCollection<RedisDatabase> Databases {
             get { return this.databases; }
-            set { this.databases = value; }
+            set { UpdateProperty(ref databases,value); }
         }
         public RedisConnection Connection { get; set; }
         public CSRedis.RedisClient RedisClient {

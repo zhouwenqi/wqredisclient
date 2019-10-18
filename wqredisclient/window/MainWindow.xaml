@@ -8,6 +8,7 @@
         xmlns:et="clr-namespace:wqredisclient.entity"
         xmlns:ct="clr-namespace:wqredisclient.convert"
         mc:Ignorable="d" Loaded="Window_Loaded"
+        TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" TextOptions.TextHintingMode="Fixed" UseLayoutRounding="True"
         Title="MainWindow" Height="300" Width="300" Icon="/wqredisclient;component/wqredisclient.ico">
     <Window.Resources>
         <ct:VisibleConvert x:Key="visibleConvert" />
@@ -33,32 +34,55 @@
             <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgDelete}" />
             <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgSetup}" />
         </StackPanel>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <CheckBox x:Name="checkTheme" Foreground="White" Margin="0 0 10 0" Click="checkTheme_Click" Content="{DynamicResource mThemeLabel}"></CheckBox>
+            <CheckBox x:Name="checkLanguage" Foreground="White" Margin="0 0 10 0" Click="checkLanguage_Click" Content="{DynamicResource mLanguageLabel}"></CheckBox>
+        </StackPanel>
         <Grid Grid.Row="1" Background="{DynamicResource darkBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="200" Width="200" />
-                <ColumnDefinition />
+                <ColumnDefinition MinWidth="1" Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TreeView TreeView.SelectedItemChanged="redisServerBox_SelectedItemChanged" Grid.Column="0" x:Name="redisServerBox">
+            <TreeView TreeViewItem.Selected ="redisServerBox_Selected"  TreeView.SelectedItemChanged="redisServerBox_SelectedItemChanged" Grid.Column="0" x:Name="redisServerBox">                
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type et:RedisServer}" ItemsSource="{Binding Databases}">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource collapsedConvert}}" Width="14"  Height="14" Fill="{Binding Path=IsConnectioned,Converter={StaticResource fillConvert}}" Data="{StaticResource svgRedis}" Stretch="Fill" />
-                            <Path Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource visibleConvert}}"  Width="14" Height="14" Fill="{DynamicResource drakBrush}" Data="{StaticResource svgLoading}" Stretch="Fill" />
-                            <TextBlock Text="{Binding Connection.Name}" />
-                            <TextBlock Text="{Binding IsConnectioned}" />
-                        </StackPanel>
+                        <Border Style="{StaticResource treeViewBorderStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource collapsedConvert}}" Width="14"  Height="14" Fill="{Binding Path=IsConnectioned,Converter={StaticResource fillConvert}}" Data="{StaticResource svgServer}" Stretch="Fill"></Path>
+                                <wq:Loading Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource visibleConvert}}"  Width="14" Height="14" Fill="{DynamicResource icoNormalBrush}"></wq:Loading>
+                                <TextBlock Text="{Binding Connection.Name}" />
+                            </StackPanel>                            
+                        </Border>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type et:RedisDatabase}">
-                        <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
-                            <Path Margin="0 0 8 0" Width="14" Height="14" Fill="{DynamicResource disableBrush}" Data="{StaticResource svgDatabase}" Stretch="Fill" />
-                            <TextBlock Text="{Binding Name}" />
-                        </StackPanel>
+                        <Border Style="{StaticResource treeViewBorderStyle}">
+                            <StackPanel Width="auto" Height="auto" Orientation="Horizontal" Margin="24 0 0 0">
+                                <Path Margin="0 0 8 0" Width="14" Height="14" Fill="{DynamicResource icoNormalBrush}" Data="{StaticResource svgDatabase}" Stretch="Fill">
+                                    
+                                </Path>
+                                <TextBlock Text="{Binding Name}" />
+                                <TextBlock Margin="4 0 0 0" Foreground="{DynamicResource icoNormalBrush}" Text="{Binding Path = KeyCount, StringFormat='({0})'}" />                               
+                            </StackPanel>                           
+                        </Border>
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>                
             </TreeView>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />                    
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="10">
+                    <TextBox />
+                    <Button>Search</Button>
+                </StackPanel>                
+            </Grid>           
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="1">
+            
         </Grid>
     </Grid>
 </Window>

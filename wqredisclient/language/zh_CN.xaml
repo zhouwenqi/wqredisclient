@@ -5,4 +5,10 @@
     <sys:String x:Key="mConnectionButtonText">
         连接
     </sys:String>
+    <sys:String x:Key="mThemeLabel">
+        主题
+    </sys:String>
+    <sys:String x:Key="mLanguageLabel">
+        语言
+    </sys:String>
 </ResourceDictionary>

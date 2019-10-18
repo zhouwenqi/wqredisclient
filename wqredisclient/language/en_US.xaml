@@ -5,4 +5,10 @@
     <sys:String x:Key="mConnectionButtonText">
         Connection
     </sys:String>
+    <sys:String x:Key="mThemeLabel">
+        Theme
+    </sys:String>
+    <sys:String x:Key="mLanguageLabel">
+        Language
+    </sys:String>
 </ResourceDictionary>

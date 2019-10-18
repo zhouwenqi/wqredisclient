@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace wqredisclient.window
     /// </summary>
     public partial class MainWindow : Window
     {
+        private TreeViewItem selectDatabaseItem;
         public MainWindow()
         {
             InitializeComponent();
@@ -61,7 +63,8 @@ namespace wqredisclient.window
 
             App.config.RedisConnections.ForEach((connection) => {                
                 RedisUtils.addConnection(connection);
-            });           
+            });
+            
 
             redisServerBox.Items.Clear();
             this.Dispatcher.Invoke(new Action(delegate
@@ -72,27 +75,37 @@ namespace wqredisclient.window
             
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            ResourceDictionary resource = new ResourceDictionary();
-            resource.Source = new Uri("/language/zh_CN.xaml", UriKind.Relative);
-            Console.WriteLine("size:" + Application.Current.Resources.MergedDictionaries.Count);
-            Application.Current.Resources.MergedDictionaries[1] = resource;
-        }
-
         private void redisServerBox_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            RedisServer redisServer = (RedisServer)e.NewValue;
-            if(!redisServer.RedisClient.IsConnected)
+            selectDatabaseItem = (TreeViewItem)redisServerBox.ItemContainerGenerator.ContainerFromItem(e.NewValue);
+            if (e.NewValue.GetType() == typeof(RedisServer))
             {
-                redisServer.IsConnectioning = true;
-                ThreadStart threadStart = new ThreadStart(() => {
-                    redisConnecton(redisServer);
+                RedisServer redisServer = (RedisServer)e.NewValue;
+                if (!redisServer.RedisClient.IsConnected)
+                {
+                    redisServer.IsConnectioning = true;
+                    ThreadStart threadStart = new ThreadStart(() =>
+                    {
+                        redisConnecton(redisServer);
+                    });
+                    new Thread(threadStart).Start();
+                }
+            }
+            else if (e.NewValue.GetType() == typeof(RedisDatabase))
+            {
+                RedisDatabase redisDatabase = (RedisDatabase)e.NewValue;
+                ThreadStart threadStart = new ThreadStart(() =>
+                {
+                    getKeys(redisDatabase);
                 });
                 new Thread(threadStart).Start();
-            }
+            }            
         }
 
+        /// <summary>
+        /// redis connection
+        /// </summary>
+        /// <param name="redisServer"></param>
         private void redisConnecton(RedisServer redisServer)
         {
             CSRedis.RedisClient redisClient = redisServer.RedisClient;
@@ -106,10 +119,21 @@ namespace wqredisclient.window
                 {
                     redisServer.IsConnectioning = false;
                     Console.WriteLine("connection error....");
-                }
-                             
+                }                             
             }
 
+        }
+        private void getKeys(RedisDatabase redisDatabase)
+        {
+            CSRedis.RedisClient redisClient = redisDatabase.ParentServer.RedisClient;
+            redisClient.Call("SELECT "+redisDatabase.Id);
+            string[] keys = redisClient.Keys("*");
+            redisDatabase.KeyCount = keys.Length;
+            foreach(String key in keys)
+            {
+                Console.WriteLine("k:" + key);
+            }
+            
         }
 
         private void RedisClient_Connected(object sender, EventArgs e)
@@ -117,9 +141,61 @@ namespace wqredisclient.window
             CSRedis.RedisClient redisClient = (CSRedis.RedisClient)sender;            
             RedisServer redisServer = RedisUtils.getRedisServer(redisClient);
             Console.WriteLine("connection success...");
+            int dbCount = RedisUtils.getDatabasesCount(redisClient);
+            ObservableCollection<RedisDatabase> databases = new ObservableCollection<RedisDatabase>();
+            for (int i = 0; i < dbCount; i++)
+            {
+                string dbName = "db" + i;                
+                databases.Add(new RedisDatabase() { Id = i, Name = dbName, ParentServer = redisServer });
+            }
+            redisServer.Databases = databases;
             redisServer.IsConnectioning = false;
             redisServer.IsConnectioned = true;
-            Console.WriteLine("name:" + redisServer.Connection.Name);
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                selectDatabaseItem.IsExpanded = true;
+            }));
+        }
+
+        private void checkTheme_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void checkLanguage_Click(object sender, RoutedEventArgs e)
+        {
+            ResourceDictionary resource = new ResourceDictionary();
+            if ((bool)checkLanguage.IsChecked)
+            {
+                resource.Source = new Uri("/language/zh_CN.xaml", UriKind.Relative);
+            }
+            else
+            {
+                resource.Source = new Uri("/language/en_US.xaml", UriKind.Relative);
+            } 
+            Application.Current.Resources.MergedDictionaries[1] = resource;
+        }
+
+        private void redisServerBox_Selected(object sender, RoutedEventArgs e)
+        {
+            //selectDatabaseItem = (TreeViewItem)e.OriginalSource;
+            //if (redisServerBox.SelectedItem.GetType() == typeof(RedisServer))
+            //{
+            //    RedisServer redisServer = (RedisServer)redisServerBox.SelectedItem;
+            //    if (!redisServer.RedisClient.IsConnected)
+            //    {
+            //        redisServer.IsConnectioning = true;
+            //        ThreadStart threadStart = new ThreadStart(() =>
+            //        {
+            //            redisConnecton(redisServer);
+            //        });
+            //        new Thread(threadStart).Start();
+            //    }
+            //}
+            //else if (redisServerBox.SelectedItem.GetType() == typeof(RedisDatabase))
+            //{
+            //    RedisDatabase redisDatabase = (RedisDatabase)redisServerBox.SelectedItem;
+            //}
         }
     }
 }

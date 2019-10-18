@@ -70,6 +70,9 @@
     </ApplicationDefinition>
     <Compile Include="common\ConfigUtils.cs" />
     <Compile Include="common\RedisUtils.cs" />
+    <Compile Include="components\Loading.xaml.cs">
+      <DependentUpon>Loading.xaml</DependentUpon>
+    </Compile>
     <Compile Include="convert\FillConvert.cs" />
     <Compile Include="convert\VisibleConvert.cs" />
     <Compile Include="convert\CollapsedConvert.cs" />
@@ -87,6 +90,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="components\Loading.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="components\TopButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

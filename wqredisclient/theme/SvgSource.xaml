@@ -186,4 +186,12 @@
             </PathGeometry.Figures>
         </PathGeometry>
     </GeometryGroup>
+    <!-- svg expand -->
+    <GeometryGroup x:Key="svgExpand">
+        <PathGeometry>
+            <PathGeometry.Figures>
+                M944.6 414.6L566.1 775.5c-29.9 28.5-78.3 28.5-108.2 0L79.4 414.6c-29.9-28.5-29.9-74.6 0-103.1s78.3-28.5 108.2 0L512 620.8l324.5-309.4c29.9-28.5 78.3-28.5 108.2 0 29.8 28.5 29.8 74.7-0.1 103.2z
+            </PathGeometry.Figures>
+        </PathGeometry>
+    </GeometryGroup>
 </ResourceDictionary>
