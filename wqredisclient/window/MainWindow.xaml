@@ -11,9 +11,10 @@
         TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" TextOptions.TextHintingMode="Fixed" UseLayoutRounding="True"
         Title="MainWindow" Height="300" Width="300" Icon="/wqredisclient;component/wqredisclient.ico">
     <Window.Resources>
-        <ct:VisibleConvert x:Key="visibleConvert" />
-        <ct:CollapsedConvert x:Key="collapsedConvert" />
-        <ct:FillConvert x:Key="fillConvert" />
+        <ct:BoolVisibleConvert x:Key="boolVisibleConvert" />
+        <ct:BoolCollapsedConvert x:Key="boolCollapsedConvert" />
+        <ct:BoolBrushConvert x:Key="boolBrushConvert" />
+        <ct:CountBrushConvert x:Key="countBrushConvert" />
     </Window.Resources>
     <Grid SnapsToDevicePixels="True">
         <Grid.ColumnDefinitions>
@@ -40,19 +41,19 @@
         </StackPanel>
         <Grid Grid.Row="1" Background="{DynamicResource darkBackgroundBrush}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="200" Width="200" />
+                <ColumnDefinition MinWidth="240" Width="240" />
                 <ColumnDefinition MinWidth="1" Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TreeView TreeViewItem.Selected ="redisServerBox_Selected"  TreeView.SelectedItemChanged="redisServerBox_SelectedItemChanged" Grid.Column="0" x:Name="redisServerBox">                
-                <TreeView.Resources>
+            <TreeView Style="{StaticResource redisDbTreeViewStyle}"  TreeView.SelectedItemChanged="redisServerBox_SelectedItemChanged" Grid.Column="0" x:Name="redisServerBox">                
+                <TreeView.Resources>                    
                     <HierarchicalDataTemplate DataType="{x:Type et:RedisServer}" ItemsSource="{Binding Databases}">
                         <Border Style="{StaticResource treeViewBorderStyle}">
                             <StackPanel Orientation="Horizontal">
-                                <Path Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource collapsedConvert}}" Width="14"  Height="14" Fill="{Binding Path=IsConnectioned,Converter={StaticResource fillConvert}}" Data="{StaticResource svgServer}" Stretch="Fill"></Path>
-                                <wq:Loading Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource visibleConvert}}"  Width="14" Height="14" Fill="{DynamicResource icoNormalBrush}"></wq:Loading>
+                                <Path Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource boolCollapsedConvert}}" Width="14"  Height="14" Fill="{Binding Path=IsConnectioned,Converter={StaticResource boolBrushConvert}}" Data="{StaticResource svgServer}" Stretch="Fill"></Path>
+                                <wq:Loading Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource boolVisibleConvert}}"  Width="14" Height="14" Fill="{DynamicResource icoNormalBrush}"></wq:Loading>
                                 <TextBlock Text="{Binding Connection.Name}" />
                             </StackPanel>                            
                         </Border>
@@ -60,10 +61,10 @@
                     <HierarchicalDataTemplate DataType="{x:Type et:RedisDatabase}">
                         <Border Style="{StaticResource treeViewBorderStyle}">
                             <StackPanel Width="auto" Height="auto" Orientation="Horizontal" Margin="24 0 0 0">
-                                <Path Margin="0 0 8 0" Width="14" Height="14" Fill="{DynamicResource icoNormalBrush}" Data="{StaticResource svgDatabase}" Stretch="Fill">
+                                <Path Margin="0 0 8 0" Width="14" Height="14" Fill="{Binding Path=KeyCount,Converter={StaticResource countBrushConvert}}" Data="{StaticResource svgDatabase}" Stretch="Fill">
                                     
                                 </Path>
-                                <TextBlock Text="{Binding Name}" />
+                                <TextBlock x:Name="dbName" Text="{Binding Name}" />
                                 <TextBlock Margin="4 0 0 0" Foreground="{DynamicResource icoNormalBrush}" Text="{Binding Path = KeyCount, StringFormat='({0})'}" />                               
                             </StackPanel>                           
                         </Border>
@@ -78,11 +79,31 @@
                 <StackPanel Grid.Row="0" Margin="10">
                     <TextBox />
                     <Button>Search</Button>
-                </StackPanel>                
+                </StackPanel>
+                <TreeView Style="{StaticResource redisKeyTreeViewStyle}" Grid.Row="1" x:Name="redisKeysBox">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type et:RedisKey}" ItemsSource="{Binding Keys}">
+                        <Border Margin="20 0 0 0" Style="{StaticResource treeViewBorderStyle}">
+                            <StackPanel Orientation="Horizontal">                                
+                                <TextBlock ToolTip="{Binding Key}" Text="{Binding Name}" />
+                            </StackPanel>                            
+                        </Border>
+                    </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
             </Grid>           
         </Grid>
         <Grid Grid.Column="1" Grid.Row="1">
-            
+            <TreeView Grid.Row="1">
+                <TreeViewItem Header="Field">
+                    <TreeViewItem Header="Open" />
+                    <TreeViewItem Header="Save" />
+                </TreeViewItem>
+                <TreeViewItem Header="View">
+
+                </TreeViewItem>
+                <TreeViewItem Header="Help" />
+            </TreeView>
         </Grid>
     </Grid>
 </Window>

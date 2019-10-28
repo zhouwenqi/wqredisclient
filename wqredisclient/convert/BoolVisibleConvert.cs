@@ -7,11 +7,10 @@ using System.Windows.Data;
 using System.Globalization;
 using System.Windows.Shapes;
 using System.Windows;
-using System.Windows.Media;
 
 namespace wqredisclient.convert
 {
-    public class FillConvert : IValueConverter
+    public class BoolVisibleConvert : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -19,10 +18,8 @@ namespace wqredisclient.convert
             {
                 return DependencyProperty.UnsetValue;
             }
-            bool isSuccess = (bool)value;
-            SolidColorBrush primaryBrush = (SolidColorBrush)Application.Current.FindResource("primaryBrush");
-            SolidColorBrush icoLightBrush = (SolidColorBrush)Application.Current.FindResource("icoNormalBrush");
-            return isSuccess ? primaryBrush : icoLightBrush;
+            bool isVisable = (bool)value;
+            return isVisable ? Visibility.Visible : Visibility.Collapsed;
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -30,8 +27,8 @@ namespace wqredisclient.convert
             {
                 return false;
             }
-            SolidColorBrush brush = (SolidColorBrush)value;
-            return brush.Color.R == 96 ? true : false;
+            Visibility visible = (Visibility)value;
+            return visible == Visibility.Visible ? true : false;
         }
 
     }

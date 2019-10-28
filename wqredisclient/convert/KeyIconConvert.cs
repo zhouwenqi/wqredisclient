@@ -3,33 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Globalization;
-using System.Windows.Shapes;
+using System.Windows.Data;
 using System.Windows;
+using System.Windows.Media;
+
 
 namespace wqredisclient.convert
 {
-    public class CollapsedConvert : IValueConverter
+    class KeyIconConvert : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value == null)
+            if (value == null)
             {
                 return DependencyProperty.UnsetValue;
             }
-            bool isVisable = (bool)value;
-            return isVisable ? Visibility.Collapsed : Visibility.Visible;
+            int count = (int)value;
+            PathGeometry geometryFolder = (PathGeometry)Application.Current.FindResource("svgFolderOpen");
+            PathGeometry geometryKey = (PathGeometry)Application.Current.FindResource("svgRedisKey");
+            return count > 0 ? geometryKey : geometryFolder;
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-            {
-                return false;
-            }
-            Visibility visible = (Visibility)value;
-            return visible == Visibility.Collapsed ? true : false;
+            return 0;
         }
-
     }
 }

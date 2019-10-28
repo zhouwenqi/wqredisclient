@@ -33,6 +33,9 @@ namespace wqredisclient.window
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             initServerList();
+
+            string[] keys = { "423424", "234smfls", "234smfls:333","win:4234","windoww", "3324:44", "9849234", "win:4423" };
+            RedisKeyUtils.getRedisKeys(keys);
         }
 
         private void initServerList()
@@ -123,18 +126,31 @@ namespace wqredisclient.window
             }
 
         }
+
         private void getKeys(RedisDatabase redisDatabase)
         {
+            char[] splits = new char[] { ':', '#', '=' };
+           
             CSRedis.RedisClient redisClient = redisDatabase.ParentServer.RedisClient;
             redisClient.Call("SELECT "+redisDatabase.Id);
             string[] keys = redisClient.Keys("*");
             redisDatabase.KeyCount = keys.Length;
-            foreach(String key in keys)
+            ObservableCollection<RedisKey> redisKeys = new ObservableCollection<RedisKey>();
+            if (keys.Length > 0)
             {
-                Console.WriteLine("k:" + key);
-            }
-            
+                string mmt = "file:open:excel:384982&file:open:excel:884982&file:open:word:444234&file:open:word:998402&file:save:excel:4444&file:save:excel:3333&file:delete:4444&file:delete:9999&file:oi&edit:open:3333&edit:query:4444&project:5555&project:33333&view&window";
+                keys = mmt.Split('&');
+                redisKeys = RedisKeyUtils.getSplitStr(keys);
+            }            
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                redisKeysBox.ItemsSource = redisKeys;
+            }));
+
         }
+        
+       
+        
 
         private void RedisClient_Connected(object sender, EventArgs e)
         {
@@ -174,28 +190,6 @@ namespace wqredisclient.window
                 resource.Source = new Uri("/language/en_US.xaml", UriKind.Relative);
             } 
             Application.Current.Resources.MergedDictionaries[1] = resource;
-        }
-
-        private void redisServerBox_Selected(object sender, RoutedEventArgs e)
-        {
-            //selectDatabaseItem = (TreeViewItem)e.OriginalSource;
-            //if (redisServerBox.SelectedItem.GetType() == typeof(RedisServer))
-            //{
-            //    RedisServer redisServer = (RedisServer)redisServerBox.SelectedItem;
-            //    if (!redisServer.RedisClient.IsConnected)
-            //    {
-            //        redisServer.IsConnectioning = true;
-            //        ThreadStart threadStart = new ThreadStart(() =>
-            //        {
-            //            redisConnecton(redisServer);
-            //        });
-            //        new Thread(threadStart).Start();
-            //    }
-            //}
-            //else if (redisServerBox.SelectedItem.GetType() == typeof(RedisDatabase))
-            //{
-            //    RedisDatabase redisDatabase = (RedisDatabase)redisServerBox.SelectedItem;
-            //}
         }
     }
 }

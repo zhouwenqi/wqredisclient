@@ -6,9 +6,6 @@
         <ResourceDictionary Source="Base.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Miscellaneous Brushes -->
-    <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
-
     <!-- button style -->
     <Style TargetType="{x:Type wq:TopButton}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -130,31 +127,13 @@
     </Style>
     
     <!-- Server TreeView style -->
-    <Style x:Key="{x:Type TreeView}" TargetType="TreeView">
-        <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="TreeView">
-                    <Border BorderThickness="0" Background="White">
-                        <ScrollViewer  Focusable="False" CanContentScroll="False" Padding="0">
-                            <ItemsPresenter/>
-                        </ScrollViewer>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    
-    <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
+    <Style x:Key="expandCollapseToggleStyle" TargetType="ToggleButton">
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Grid Width="10" Height="7" Background="Transparent">
-                        <Path Stretch="Fill" RenderTransformOrigin="0.5 0.5" x:Name="ExpandPath" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,1,1,1" Fill="{StaticResource GlyphBrush}" Data="{StaticResource svgExpand}">
+                    <Grid Width="8" Height="5" Background="Transparent">
+                        <Path Stretch="Fill" RenderTransformOrigin="0.5 0.5" x:Name="ExpandPath" HorizontalAlignment="Left" VerticalAlignment="Center" Fill="{StaticResource icoLightBrush}" Data="{StaticResource svgExpand}">
                             <Path.RenderTransform>
                                 <RotateTransform Angle="-90" />
                             </Path.RenderTransform>
@@ -173,8 +152,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style x:Key="{x:Type TreeViewItem}" TargetType="{x:Type TreeViewItem}">
+
+    <Style x:Key="redisDbTreeItemStyle" TargetType="{x:Type TreeViewItem}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         <Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
@@ -184,7 +163,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
                     <Grid SnapsToDevicePixels="True">
-                        <Grid.ColumnDefinitions>                            
+                        <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition MinWidth="40" Width="Auto" />
                         </Grid.ColumnDefinitions>
@@ -192,11 +171,13 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition />
                         </Grid.RowDefinitions>
+                        
                         <Border Name="Bd" Grid.Column="0" Grid.ColumnSpan="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
-                            <ContentPresenter Width="{TemplateBinding ActualWidth }" x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>                            
+                            <ContentPresenter Width="{TemplateBinding ActualWidth}" x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>                            
                         </Border>
-                        <ToggleButton Grid.Column="1" x:Name="Expander" Style="{StaticResource ExpandCollapseToggleStyle}" IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
-                        <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />                        
+
+                        <ToggleButton Grid.Column="1" x:Name="Expander" Style="{StaticResource expandCollapseToggleStyle}" IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                        <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsExpanded" Value="false">
@@ -210,15 +191,15 @@
                                 <Condition Property="HasHeader" Value="false"/>
                                 <Condition Property="Width" Value="Auto"/>
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="PART_Header" Property="MinWidth" Value="75"/>
-                        </MultiTrigger>                        
+
+                        </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="HasHeader" Value="false"/>
                                 <Condition Property="Height" Value="Auto"/>
                             </MultiTrigger.Conditions>
                             <Setter TargetName="PART_Header" Property="MinHeight" Value="19"/>
-                        </MultiTrigger>                        
+                        </MultiTrigger>
                         <Trigger Property="IsSelected" Value="true">
                             <Setter TargetName="Bd" Property="Background" Value="{DynamicResource darkBackgroundBrush}" />
                             <Setter Property="Foreground" Value="{DynamicResource primaryBrush}" />
@@ -239,6 +220,132 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="redisDbTreeViewStyle" TargetType="{x:Type TreeView}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource redisDbTreeItemStyle}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeView}">
+                    <Border BorderThickness="0" Background="White">
+                        <ScrollViewer  Focusable="False" CanContentScroll="False" Padding="0">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Keys TreeView style -->
+    <Style x:Key="fieldToggleStyle" TargetType="ToggleButton">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid Width="14" Height="12" Background="Transparent">
+                        <Path Stretch="Fill" RenderTransformOrigin="0.5 0.5" x:Name="fieldPath" HorizontalAlignment="Left" VerticalAlignment="Center" Fill="{StaticResource icoLightBrush}" Data="{StaticResource svgFolderClosed}"></Path>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Data" TargetName="fieldPath" Value="{StaticResource svgFolderOpen }" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="redisKeyTreeItemStyle" TargetType="{x:Type TreeViewItem}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        <Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource textNormalBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                    <Grid SnapsToDevicePixels="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="40" Width="Auto" />
+                            <ColumnDefinition MinWidth="40" Width="Auto" />
+                            <ColumnDefinition Width="*"/>                            
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>                        
+                        <Border Name="Bd" Grid.Column="0" Grid.ColumnSpan="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter Width="{TemplateBinding ActualWidth}" x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                        </Border>
+                        <ToggleButton Grid.Column="0" x:Name="Expander" Style="{StaticResource fieldToggleStyle}" IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                        <Path Grid.Column="1" Stretch="Fill" Width="16" Height="16" x:Name="keyIcon" Data="{StaticResource svgDatabase}" />
+                        <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="false">
+                            <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="HasItems" Value="false">
+                            <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="HasHeader" Value="false"/>
+                                <Condition Property="Width" Value="Auto"/>
+                            </MultiTrigger.Conditions>
+
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="HasHeader" Value="false"/>
+                                <Condition Property="Height" Value="Auto"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="PART_Header" Property="MinHeight" Value="19"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter TargetName="Bd" Property="Background" Value="White" />
+                            <Setter Property="Foreground" Value="{DynamicResource primaryBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="true"/>
+                                <Condition Property="IsSelectionActive" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Bd" Property="Background" Value="White" />
+                            <Setter Property="Foreground" Value="{DynamicResource primaryBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="redisKeyTreeViewStyle" TargetType="{x:Type TreeView}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource redisKeyTreeItemStyle}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeView}">
+                    <Border BorderThickness="0" Background="{DynamicResource darkBackgroundBrush}">
+                        <ScrollViewer  Focusable="False" CanContentScroll="False" Padding="0">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- TreeViewItem Border style -->
     <Style x:Key="treeViewBorderStyle" TargetType="{x:Type Border}">
         <Setter Property="Background" Value="Transparent" />
