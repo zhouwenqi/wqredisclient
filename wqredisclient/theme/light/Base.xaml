@@ -6,11 +6,14 @@
     <Color x:Key="lightBackgroundColor" A="255" R="238" G="242" B="248" />
     <Color x:Key="textNormalColor" A="255" R="51" G="51" B="51" />
     <Color x:Key="textLightColor" A="255" R="229" G="230" B="246" />
-    
+    <Color x:Key="textDisableColor" A="255" R="200" G="200" B="200" />
+    <Color x:Key="shadowEffectColor" A="255" R="153" G="153" B="153" />    
+
+
     <SolidColorBrush x:Key="primaryBrush" Color="{StaticResource primaryColor}" />
     <SolidColorBrush x:Key="disableBrush" Color="#dddddd" />
     <SolidColorBrush x:Key="drakBrush" Color="#cccccc" />
-    <SolidColorBrush x:Key="icoNormalBrush" Color="#bbbbbb" />
+    <SolidColorBrush x:Key="icoNormalBrush" Color="#c6cbd2" />
     <SolidColorBrush x:Key="icoLightBrush" Color="#666666" />
     <SolidColorBrush x:Key="primaryAlpha1Brush" Color="{StaticResource primaryColor}" Opacity="0.05" />
     <SolidColorBrush x:Key="primaryAlpha2Brush" Color="{StaticResource primaryColor}" Opacity="0.3" />
@@ -18,4 +21,7 @@
     <SolidColorBrush x:Key="textLightBrush" Color="{StaticResource textLightColor}" />
     <SolidColorBrush x:Key="darkBackgroundBrush" Color="{StaticResource darkBackgroundColor}" />
     <SolidColorBrush x:Key="lightBackgroundBrush" Color="{StaticResource lightBackgroundColor}" />
+    <SolidColorBrush x:Key="textDisableBrush" Color="{StaticResource textDisableColor}" />
+    <SolidColorBrush x:Key="shadowEffectBrush" Color="{StaticResource shadowEffectColor}" />
+    <SolidColorBrush x:Key="dialogBackgroundBrush" Color="#f2f5f8" />
 </ResourceDictionary>

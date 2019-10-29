@@ -14,7 +14,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type wq:TopButton}">
-                    <Border>
+                    <Border Background="Transparent">
                         <Path Data="{TemplateBinding Icon}" Fill="White" Stretch="Fill" />
                     </Border>
                 </ControlTemplate>
@@ -76,7 +76,7 @@
     </Style>
 
     <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
-        <Grid >
+        <Grid>
             <Border CornerRadius="0" Background="Transparent" />
             <Track Name="PART_Track" IsDirectionReversed="true">
                 <Track.DecreaseRepeatButton>
@@ -93,7 +93,7 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="HorizontalScrollBar" TargetType="{x:Type ScrollBar}">
-        <Grid >
+        <Grid>
             <Border CornerRadius="0" Background="Transparent" />
             <Track Name="PART_Track" IsDirectionReversed="False">
                 <Track.DecreaseRepeatButton>
@@ -115,11 +115,11 @@
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="Width" Value="Auto"/>
-                <Setter Property="Height" Value="6" />
+                <Setter Property="Height" Value="4" />
                 <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
             </Trigger>
             <Trigger Property="Orientation" Value="Vertical">
-                <Setter Property="Width" Value="6"/>
+                <Setter Property="Width" Value="4"/>
                 <Setter Property="Height" Value="Auto" />
                 <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
             </Trigger>
@@ -246,12 +246,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Grid Width="14" Height="12" Background="Transparent">
-                        <Path Stretch="Fill" RenderTransformOrigin="0.5 0.5" x:Name="fieldPath" HorizontalAlignment="Left" VerticalAlignment="Center" Fill="{StaticResource icoLightBrush}" Data="{StaticResource svgFolderClosed}"></Path>
+                    <Grid Width="16" Height="14" Background="Transparent">
+                        <Path Stretch="Fill" RenderTransformOrigin="0.5 0.5" x:Name="fieldPath" HorizontalAlignment="Left" VerticalAlignment="Center" Fill="{DynamicResource icoNormalBrush}" Data="{StaticResource svgFolderClosed}"></Path>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter Property="Data" TargetName="fieldPath" Value="{StaticResource svgFolderOpen }" />
+                            <Setter Property="Fill" TargetName="fieldPath" Value="{DynamicResource icoLightBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -270,34 +271,33 @@
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
                     <Grid SnapsToDevicePixels="True">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition MinWidth="40" Width="Auto" />
-                            <ColumnDefinition MinWidth="40" Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*"/>                            
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition />
                         </Grid.RowDefinitions>                        
-                        <Border Name="Bd" Grid.Column="0" Grid.ColumnSpan="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                        <Border Name="Bd" Grid.Column="0" Grid.ColumnSpan="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter Width="{TemplateBinding ActualWidth}" x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
                         </Border>
-                        <ToggleButton Grid.Column="0" x:Name="Expander" Style="{StaticResource fieldToggleStyle}" IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
-                        <Path Grid.Column="1" Stretch="Fill" Width="16" Height="16" x:Name="keyIcon" Data="{StaticResource svgDatabase}" />
-                        <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" />
+                        <ToggleButton Margin="12 0 12 0" Grid.Column="0" x:Name="expander" Style="{StaticResource fieldToggleStyle}" IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                        <Path Margin="12 0 12 0" Visibility="Collapsed" Fill="{StaticResource icoNormalBrush}" Grid.Column="0" Stretch="Fill" Width="14" Height="14" x:Name="keyIcon" Data="{StaticResource svgKey}" />
+                        <ItemsPresenter Margin="-4 0 0 0" x:Name="ItemsHost" Grid.Row="1" Grid.Column="1"  />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsExpanded" Value="false">
                             <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
                         </Trigger>
                         <Trigger Property="HasItems" Value="false">
-                            <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="expander" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="keyIcon" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="HasHeader" Value="false"/>
                                 <Condition Property="Width" Value="Auto"/>
                             </MultiTrigger.Conditions>
-
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -308,6 +308,7 @@
                         </MultiTrigger>
                         <Trigger Property="IsSelected" Value="true">
                             <Setter TargetName="Bd" Property="Background" Value="White" />
+                            <Setter TargetName="keyIcon" Property="Fill" Value="{DynamicResource icoLightBrush}" />
                             <Setter Property="Foreground" Value="{DynamicResource primaryBrush}" />
                         </Trigger>
                         <MultiTrigger>
@@ -316,6 +317,7 @@
                                 <Condition Property="IsSelectionActive" Value="false"/>
                             </MultiTrigger.Conditions>
                             <Setter TargetName="Bd" Property="Background" Value="White" />
+                            <Setter TargetName="keyIcon" Property="Fill" Value="{DynamicResource icoNormalBrush}" />
                             <Setter Property="Foreground" Value="{DynamicResource primaryBrush}" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="false">
@@ -356,7 +358,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <!-- loading -->
+    <!-- Loading style -->
     <Style TargetType="{x:Type wq:Loading}">
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="Template">
@@ -380,6 +382,25 @@
                             </Path.Triggers>
                         </Path>
                     </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Tipop style -->
+    <Style TargetType="{x:Type ToolTip}">
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToolTip}">
+                    <Grid>
+                        <Border Margin="5" Padding="10 6" Background="{DynamicResource dialogBackgroundBrush}">                            
+                            <TextBlock Text="{TemplateBinding Content}" Foreground="{DynamicResource textNormalBrush}" />
+                            <Border.Effect>
+                                <DropShadowEffect Color="{DynamicResource shadowEffectColor}" Opacity="0.5" ShadowDepth="0" BlurRadius="5" />
+                            </Border.Effect>
+                        </Border>
+                    </Grid>                    
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -33,37 +33,10 @@ namespace wqredisclient.window
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             initServerList();
-
-            string[] keys = { "423424", "234smfls", "234smfls:333","win:4234","windoww", "3324:44", "9849234", "win:4423" };
-            RedisKeyUtils.getRedisKeys(keys);
         }
 
         private void initServerList()
         {
-            //List<RedisConnection> redisConnections = new List<RedisConnection>();
-            //RedisConnection redisServer1 = new RedisConnection();            
-            //redisServer1.Name = "192.168.1.51";
-            //redisServer1.Host = "192.168.1.51";
-            //redisServer1.Port = 6379;
-            //RedisConnection redisServer2 = new RedisConnection();
-            //redisServer2.Name = "192.168.3.220";
-            //redisServer2.Host = "192.168.3.220";
-            //redisServer2.Port = 6379;
-            //RedisConnection redisServer3 = new RedisConnection();
-            //redisServer3.Name = "localhost";
-            //redisServer3.Host = "localhost";
-            //redisServer3.Port = 6379;
-            //RedisConnection redisServer4 = new RedisConnection();
-            //redisServer4.Name = "jiangwei";
-            //redisServer4.Host = "192.168.1.51";
-            //redisServer4.Port = 6379;
-            //redisConnections.Add(redisServer1);
-            //redisConnections.Add(redisServer2);
-            //redisConnections.Add(redisServer3);
-            //redisConnections.Add(redisServer4);
-            //App.config.RedisConnections = redisConnections;
-            //ConfigUtils.saveConfig();
-
             App.config.RedisConnections.ForEach((connection) => {                
                 RedisUtils.addConnection(connection);
             });
@@ -138,8 +111,7 @@ namespace wqredisclient.window
             ObservableCollection<RedisKey> redisKeys = new ObservableCollection<RedisKey>();
             if (keys.Length > 0)
             {
-                string mmt = "file:open:excel:384982&file:open:excel:884982&file:open:word:444234&file:open:word:998402&file:save:excel:4444&file:save:excel:3333&file:delete:4444&file:delete:9999&file:oi&edit:open:3333&edit:query:4444&project:5555&project:33333&view&window";
-                keys = mmt.Split('&');
+                Array.Sort(keys);
                 redisKeys = RedisKeyUtils.getSplitStr(keys);
             }            
             this.Dispatcher.Invoke(new Action(delegate

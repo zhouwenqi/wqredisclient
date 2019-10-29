@@ -74,6 +74,9 @@
     <Compile Include="components\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>
+    <Compile Include="components\SearchKeyBox.xaml.cs">
+      <DependentUpon>SearchKeyBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="convert\CountBrushConvert.cs" />
     <Compile Include="convert\KeyIconConvert.cs" />
     <Compile Include="convert\BoolBrushConvert.cs" />
@@ -96,6 +99,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="components\Loading.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="components\SearchKeyBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
