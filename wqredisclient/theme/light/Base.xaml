@@ -2,26 +2,41 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:wqredisclient.theme.light">
     <Color x:Key="primaryColor" A="255" R="96" G="104" B="251" />
+    <Color x:Key="primaryDarkColor" A="255" R="72" G="80" B="230" />
     <Color x:Key="darkBackgroundColor" A="255" R="247" G="249" B="252" />
     <Color x:Key="lightBackgroundColor" A="255" R="238" G="242" B="248" />
-    <Color x:Key="textNormalColor" A="255" R="51" G="51" B="51" />
-    <Color x:Key="textLightColor" A="255" R="229" G="230" B="246" />
+    <Color x:Key="textNormalColor" A="255" R="51" G="55" B="61" />
+    <Color x:Key="textDarkColor" A="255" R="229" G="230" B="246" />
+    <Color x:Key="textBaseColor" A="255" R="128" G="135" B="144" />
     <Color x:Key="textDisableColor" A="255" R="200" G="200" B="200" />
     <Color x:Key="shadowEffectColor" A="255" R="153" G="153" B="153" />    
+    <Color x:Key="icoNormalColor" A="255" R="198" G="203" B="210" />
+    <Color x:Key="icoLightColor" A="255" R="128" G="135" B="144" />
+    <Color x:Key="borderDisableColor" A="255" R="238" G="242" B="248" />
+    <Color x:Key="borderNormalColor" A="255" R="219" G="224" B="232" />
+    <Color x:Key="borderLightColor" A="255" R="199" G="205" B="215" />
+    <Color x:Key="redColor" A="255" R="235" G="17" B="37" />
+    <Color x:Key="dialogBackgroundColor" A="255" R="247" G="249" B="252" />
 
 
     <SolidColorBrush x:Key="primaryBrush" Color="{StaticResource primaryColor}" />
+    <SolidColorBrush x:Key="primaryDarkBrush" Color="{StaticResource primaryDarkColor}" />
     <SolidColorBrush x:Key="disableBrush" Color="#dddddd" />
     <SolidColorBrush x:Key="drakBrush" Color="#cccccc" />
-    <SolidColorBrush x:Key="icoNormalBrush" Color="#c6cbd2" />
-    <SolidColorBrush x:Key="icoLightBrush" Color="#666666" />
+    <SolidColorBrush x:Key="icoNormalBrush" Color="{StaticResource icoNormalColor}" />
+    <SolidColorBrush x:Key="icoLightBrush" Color="{StaticResource icoLightColor}" />
     <SolidColorBrush x:Key="primaryAlpha1Brush" Color="{StaticResource primaryColor}" Opacity="0.05" />
     <SolidColorBrush x:Key="primaryAlpha2Brush" Color="{StaticResource primaryColor}" Opacity="0.3" />
     <SolidColorBrush x:Key="textNormalBrush" Color="{StaticResource textNormalColor}" />
-    <SolidColorBrush x:Key="textLightBrush" Color="{StaticResource textLightColor}" />
-    <SolidColorBrush x:Key="darkBackgroundBrush" Color="{StaticResource darkBackgroundColor}" />
+    <SolidColorBrush x:Key="textBaseBrush" Color="{StaticResource textBaseColor}" />
+    <SolidColorBrush x:Key="textDrakBrush" Color="{StaticResource textDrakColor}" />
     <SolidColorBrush x:Key="lightBackgroundBrush" Color="{StaticResource lightBackgroundColor}" />
     <SolidColorBrush x:Key="textDisableBrush" Color="{StaticResource textDisableColor}" />
     <SolidColorBrush x:Key="shadowEffectBrush" Color="{StaticResource shadowEffectColor}" />
-    <SolidColorBrush x:Key="dialogBackgroundBrush" Color="#f2f5f8" />
+    <SolidColorBrush x:Key="dialogBackgroundBrush" Color="{StaticResource dialogBackgroundColor}" />
+    <SolidColorBrush x:Key="darkBackgroundBrush" Color="{StaticResource darkBackgroundColor}" />
+    <SolidColorBrush x:Key="inputBackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="inputBorderBrush" Color="{StaticResource borderNormalColor}" />
+    <SolidColorBrush x:Key="inputBorderLightBrush" Color="{StaticResource borderLightColor}" />
+    <SolidColorBrush x:Key="redBrush" Color="{StaticResource redColor}" />
 </ResourceDictionary>

@@ -226,4 +226,12 @@
             </PathGeometry.Figures>
         </PathGeometry>
     </GeometryGroup>
+    <!-- svg remove -->
+    <GeometryGroup x:Key="svgRequeired">
+        <PathGeometry>
+            <PathGeometry.Figures>
+                M426.2 76h175.6l-34.7 347.3 283.2-203.7 87.9 151.9-318 143.5L938 658.6l-87.9 151.9-283-203.7 34.7 347.3H426.2l34.7-347.3-283.2 203.7-87.9-151.9L407.7 515 89.8 371.5l87.9-151.9 283.2 203.7L426.2 76z
+            </PathGeometry.Figures>
+        </PathGeometry>
+    </GeometryGroup>
 </ResourceDictionary>

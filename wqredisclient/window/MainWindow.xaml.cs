@@ -24,7 +24,9 @@ namespace wqredisclient.window
     /// </summary>
     public partial class MainWindow : Window
     {
-        private TreeViewItem selectDatabaseItem;
+        private TreeViewItem selectDatabaseItem;        
+        public RedisDatabase currentRedisDatabase;
+        public RedisKey currentRedisKey;
         public MainWindow()
         {
             InitializeComponent();
@@ -57,6 +59,10 @@ namespace wqredisclient.window
             if (e.NewValue.GetType() == typeof(RedisServer))
             {
                 RedisServer redisServer = (RedisServer)e.NewValue;
+                if(redisServer == null)
+                {
+                    return;
+                }
                 if (!redisServer.RedisClient.IsConnected)
                 {
                     redisServer.IsConnectioning = true;
@@ -69,10 +75,10 @@ namespace wqredisclient.window
             }
             else if (e.NewValue.GetType() == typeof(RedisDatabase))
             {
-                RedisDatabase redisDatabase = (RedisDatabase)e.NewValue;
+                this.currentRedisDatabase = (RedisDatabase)e.NewValue;
                 ThreadStart threadStart = new ThreadStart(() =>
                 {
-                    getKeys(redisDatabase);
+                    getKeys(currentRedisDatabase);
                 });
                 new Thread(threadStart).Start();
             }            
@@ -102,8 +108,7 @@ namespace wqredisclient.window
 
         private void getKeys(RedisDatabase redisDatabase)
         {
-            char[] splits = new char[] { ':', '#', '=' };
-           
+            char[] splits = new char[] { ':', '#', '=' };           
             CSRedis.RedisClient redisClient = redisDatabase.ParentServer.RedisClient;
             redisClient.Call("SELECT "+redisDatabase.Id);
             string[] keys = redisClient.Keys("*");
@@ -112,7 +117,7 @@ namespace wqredisclient.window
             if (keys.Length > 0)
             {
                 Array.Sort(keys);
-                redisKeys = RedisKeyUtils.getSplitStr(keys);
+                redisKeys = RedisKeyUtils.getSplitKeys(keys,null);
             }            
             this.Dispatcher.Invoke(new Action(delegate
             {
@@ -120,9 +125,6 @@ namespace wqredisclient.window
             }));
 
         }
-        
-       
-        
 
         private void RedisClient_Connected(object sender, EventArgs e)
         {
@@ -162,6 +164,49 @@ namespace wqredisclient.window
                 resource.Source = new Uri("/language/en_US.xaml", UriKind.Relative);
             } 
             Application.Current.Resources.MergedDictionaries[1] = resource;
+        }
+
+        private void redisKeysBox_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            RedisKey redisKey = (RedisKey)e.NewValue;
+            if(redisKey == null)
+            {
+                return;
+            }
+            if (redisKey.Keys.Count == 0)
+            {                
+                ThreadStart threadStart = new ThreadStart(() =>
+                {
+                    getKeyValue(redisKey);
+                });
+                new Thread(threadStart).Start();
+            }
+        }
+        private void getKeyValue(RedisKey redisKey)
+        {
+            currentRedisKey = redisKey;
+            CSRedis.RedisClient redisClient = currentRedisDatabase.ParentServer.RedisClient;            
+            string value = redisClient.Get(currentRedisKey.Key);
+            this.inputKey.Dispatcher.Invoke(new Action(delegate
+            {
+                inputKey.Text = currentRedisKey.Key;
+            }));
+            this.inputValue.Dispatcher.Invoke(new Action(delegate
+            {
+                inputValue.Text = value;
+            }));
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            if(inputKey.VaildStatus != InputVaildStatus.No)
+            {
+                inputKey.VaildStatus = InputVaildStatus.No;
+            }else
+            {
+                inputKey.VaildStatus = InputVaildStatus.Yes;
+            }
+            
         }
     }
 }

@@ -11,7 +11,6 @@ namespace wqredisclient.entity
     {
         private string key;
         private string name;
-        private string nodeKey;
         private ObservableCollection<RedisKey> keys;
         public RedisKey() {
             keys = new ObservableCollection<RedisKey>();
@@ -31,11 +30,6 @@ namespace wqredisclient.entity
         {
             set { UpdateProperty(ref key, value); }
             get { return key; }
-        }
-        public string NodeKey
-        {
-            set { UpdateProperty(ref nodeKey, value); }
-            get { return nodeKey; }
         }
 
     }

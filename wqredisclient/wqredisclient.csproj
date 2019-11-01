@@ -69,13 +69,23 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="common\ConfigUtils.cs" />
+    <Compile Include="common\EnumUtils.cs" />
     <Compile Include="common\RedisKeyUtils.cs" />
     <Compile Include="common\RedisUtils.cs" />
+    <Compile Include="components\IcoButton.xaml.cs">
+      <DependentUpon>IcoButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="components\InputBox.xaml.cs">
+      <DependentUpon>InputBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="components\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>
     <Compile Include="components\SearchKeyBox.xaml.cs">
       <DependentUpon>SearchKeyBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="components\TextareaBox.xaml.cs">
+      <DependentUpon>TextareaBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="convert\CountBrushConvert.cs" />
     <Compile Include="convert\KeyIconConvert.cs" />
@@ -98,11 +108,23 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="components\IcoButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="components\InputBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="components\Loading.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="components\SearchKeyBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="components\TextareaBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

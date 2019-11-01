@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using wqredisclient.entity;
 using wqredisclient.common;
 using System.Collections.Specialized;
+using System.Windows.Controls;
+using System.Windows;
 
 namespace wqredisclient.common
 {
@@ -14,40 +16,6 @@ namespace wqredisclient.common
     {
         public static char[] sp = new char[] { ':' };
         public static ObservableCollection<RedisKey> getRedisKeys(string[] keys)
-        {
-            ObservableCollection<RedisKey> redisKeys = new ObservableCollection<RedisKey>();
-
-            Dictionary<string, string> setKeys = new Dictionary<string, string>();
-            if(keys.Length > 0)
-            {
-                foreach(string key in keys)
-                {
-                    if (string.IsNullOrEmpty(key))
-                    {
-                        break;
-                    }
-                    string[] str = key.Split(sp, 2);
-                    string value = str.Length > 1 ? str[1] : null;                    
-                    setKeys[str[0]] = value;
-                }
-            }
-            foreach(string key in setKeys.Keys)
-            {
-                string value = setKeys[key];
-                RedisKey redisKey = new RedisKey();                
-                redisKey.Name = key;
-                if (!string.IsNullOrEmpty(value))
-                {
-                    redisKey.NodeKey = setKeys[key];
-                }else
-                {
-                    redisKey.Key = value;
-                }              
-                redisKeys.Add(redisKey);
-            }
-            return redisKeys;
-        }
-        public static ObservableCollection<RedisKey> getSplitStr(string[] keys)
         {
             Dictionary<string, HashSet<String>> dicKeys = new Dictionary<string, HashSet<String>>();
             ObservableCollection<RedisKey> redisKeys = new ObservableCollection<RedisKey>();
@@ -71,45 +39,74 @@ namespace wqredisclient.common
                 foreach(var item in dicKeys)
                 {
                     RedisKey redisKey = new RedisKey();
-                    redisKey.Name = item.Key;
+                    redisKey.Name = item.Key;                                        
                     if (item.Value != null && item.Value.Count > 0)
                     {
                         string[] str = new string[item.Value.Count];
                         item.Value.CopyTo(str);
-                        redisKey.Keys = getSplitStr(str);
+                        redisKey.Keys = getRedisKeys(str);
+                    }                    
+                    redisKeys.Add(redisKey);
+                }
+            }
+            return redisKeys;
+        }
+
+        public static string getKeys(object sender,string key)
+        {
+            if(typeof(TreeViewItem) == sender.GetType())
+            {
+                TreeViewItem item = (TreeViewItem)sender;
+                key = item.Header.ToString() + ":" + key;
+                getKeys(item.Parent, key);
+            }
+            return key;
+            
+        }
+
+        public static ObservableCollection<RedisKey> getSplitKeys(string[] keys,string prevKey)
+        {
+            Dictionary<string, HashSet<String>> dicKeys = new Dictionary<string, HashSet<String>>();
+            ObservableCollection<RedisKey> redisKeys = new ObservableCollection<RedisKey>();
+            if (keys.Length > 0)
+            {
+                foreach (string key in keys)
+                {
+                    if (string.IsNullOrEmpty(key))
+                    {
+                        break;
                     }
-                    else
+                    string[] str = key.Split(sp, 2, StringSplitOptions.None);
+                    string k = str[0];
+                    string v = str.Length > 1 ? str[1] : null;
+                    if (!dicKeys.ContainsKey(str[0]))
+                    {
+                        dicKeys[k] = new HashSet<string>();
+                    }
+                    dicKeys[k].Add(v);
+                }
+                foreach (var item in dicKeys)
+                {
+                    RedisKey redisKey = new RedisKey();
+                    redisKey.Name = item.Key;
+                    if (string.IsNullOrEmpty(prevKey))
                     {
                         redisKey.Key = item.Key;
+                    }else
+                    {
+                        redisKey.Key = prevKey + ":" + item.Key;
+                    }
+                    if (item.Value != null && item.Value.Count > 0)
+                    {
+                        string[] str = new string[item.Value.Count];
+                        item.Value.CopyTo(str);
+                        redisKey.Keys = getSplitKeys(str,redisKey.Key);
                     }
                     redisKeys.Add(redisKey);
                 }
             }
             return redisKeys;
         }
-        public static void  getSplitKey(RedisKey redisKey)
-        {
-            string[] keys = redisKey.NodeKey.Split(sp, 2);
-            Dictionary<string, string> setKeys = new Dictionary<string, string>();
-            if (keys.Length > 0)
-            {
-                foreach (string key in keys)
-                {
-                    string[] str = key.Split(sp, 2);
-                    string value = str.Length > 1 ? str[1] : null;
-                    setKeys[str[0]] = value;
-                }
-                foreach(var item in setKeys)
-                {
-                    RedisKey iKey = new RedisKey();
-                    iKey.Name = item.Key;
 
-                    foreach(string key in keys)
-                    {
-
-                    }
-                }
-            }
-        }
     }
 }

@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace wqredisclient.components
 {
     /// <summary>
-    /// SearchKeyBox.xaml 的交互逻辑
+    /// SearchBox control
     /// </summary>
     public partial class SearchKeyBox : UserControl
     {
@@ -44,6 +44,14 @@ namespace wqredisclient.components
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
             inputKeyBox.Text = "";
+        }
+
+        public TextBox Input
+        {
+            get
+            {
+                return inputKeyBox;
+            }
         }
     }
 }
