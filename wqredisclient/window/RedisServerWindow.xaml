@@ -1,0 +1,83 @@
+﻿<Window x:Class="wqredisclient.window.RedisServerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:wqredisclient.window"
+        xmlns:wq="clr-namespace:wqredisclient.components"
+        mc:Ignorable="d"
+        TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" TextOptions.TextHintingMode="Fixed" UseLayoutRounding="True"
+        Title="Add redis server" Height="440" Width="600" Icon="/wqredisclient;component/wqredisclient.ico" ResizeMode="NoResize">
+    <Grid SnapsToDevicePixels="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="Connection">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource textNormalBrush}" Grid.Row="0" Content="Connection:" />
+                    <wq:InputBox Margin="10" Text="{Binding Name}" Grid.Column="1" Grid.Row="0" Title="Connection name" />
+                    <Label Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource textNormalBrush}" Grid.Row="1" Content="Host:" />
+                    <wq:InputBox Margin="10" Text="{Binding Host}" Grid.Column="1" Grid.Row="1" Title="Redis-server host" />
+                    <Label Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource textNormalBrush}" Grid.Row="2" Content="Port:" />
+                    <wq:InputBox Margin="10" Text="{Binding Port}" Grid.Column="1" Grid.Row="2" Title="Redis-server port" />
+                    <Label Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource textNormalBrush}" Grid.Row="3" Content="Auth:" />
+                    <wq:InputBox Margin="10" Text="{Binding Auth}" Grid.Column="1" Grid.Row="3" Title="Redis-server authentication " />
+                </Grid>
+            </TabItem>
+            <TabItem Header="SSL">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource textNormalBrush}" Grid.Row="0" Content="Use SSL protocol:" />
+                    <CheckBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" VerticalAlignment="Center" Margin="10" />
+                    <Label Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource textNormalBrush}" Grid.Row="1" Content="Public key:" />
+                    <wq:InputBox Margin="10" Text="{Binding Host}" Grid.Column="1" Grid.Row="1" Title="Redis-server host" />
+                    <wq:IcoButton x:Name="btnSelectPublicKey" Margin="-11 10 10 10" Grid.Column="2" Style="{StaticResource normalButtonStyle}" Grid.Row="1" Ico="{StaticResource svgSelect}" />
+                    <Label Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource textNormalBrush}" Grid.Row="2" Content="Private key:" />
+                    <wq:InputBox Margin="10" Text="{Binding Port}" Grid.Column="1" Grid.Row="2" Title="Redis-server port" />
+                    <wq:IcoButton x:Name="btnSelectPrivateKey" Margin="-11 10 10 10" Grid.Column="2" Style="{StaticResource normalButtonStyle}" Grid.Row="2" Ico="{StaticResource svgSelect}" />
+                    <Label Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="{DynamicResource textNormalBrush}" Grid.Row="3" Content="Authority:" />
+                    <wq:InputBox Margin="10" Text="{Binding Auth}" Grid.Column="1" Grid.Row="3" Title="Redis-server authentication " />
+                    <wq:IcoButton x:Name="btnSelectAuthority" Margin="-11 10 10 10" Grid.Column="2" Style="{StaticResource normalButtonStyle}" Grid.Row="3" Ico="{StaticResource svgSelect}" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="SSL Tunnel"></TabItem>
+            <TabItem Header="Advanced Settings"></TabItem>
+        </TabControl>
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>            
+            <StackPanel Grid.Row="0">
+                <wq:IcoButton x:Name="btnTest" Style="{StaticResource normalButtonStyle}" Ico="{StaticResource svgConnection}">Test connection</wq:IcoButton>
+            </StackPanel>            
+            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <wq:IcoButton Margin="10 0 0 0" x:Name="btnSave" Style="{StaticResource primaryButtonStyle}" Ico="{StaticResource svgSave}">save</wq:IcoButton>
+                <wq:IcoButton Click="btnCancel_Click" Margin="10 0 0 0" x:Name="btnCancel" Style="{StaticResource normalButtonStyle}">Cancel</wq:IcoButton>
+            </StackPanel>            
+        </Grid>
+    </Grid>
+</Window>

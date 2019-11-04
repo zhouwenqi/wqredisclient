@@ -16,6 +16,7 @@ using wqredisclient.entity;
 using wqredisclient.common;
 using System.Threading;
 using System.Collections;
+using wqredisclient.components;
 
 namespace wqredisclient.window
 {
@@ -152,20 +153,6 @@ namespace wqredisclient.window
 
         }
 
-        private void checkLanguage_Click(object sender, RoutedEventArgs e)
-        {
-            ResourceDictionary resource = new ResourceDictionary();
-            if ((bool)checkLanguage.IsChecked)
-            {
-                resource.Source = new Uri("/language/zh_CN.xaml", UriKind.Relative);
-            }
-            else
-            {
-                resource.Source = new Uri("/language/en_US.xaml", UriKind.Relative);
-            } 
-            Application.Current.Resources.MergedDictionaries[1] = resource;
-        }
-
         private void redisKeysBox_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             RedisKey redisKey = (RedisKey)e.NewValue;
@@ -207,6 +194,27 @@ namespace wqredisclient.window
                 inputKey.VaildStatus = InputVaildStatus.Yes;
             }
             
+        }
+
+        /// <summary>
+        /// TopButton event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TopButton_Click(object sender, RoutedEventArgs e)
+        {
+            TopButton topButton = (TopButton)sender;
+            if(null == topButton)
+            {
+                return;
+            }
+            switch (topButton.Name)
+            {
+                case "btnAddConnection":
+                    RedisServerWindow redisServerWindow = new RedisServerWindow();
+                    redisServerWindow.ShowDialog();
+                    break;
+            }
         }
     }
 }

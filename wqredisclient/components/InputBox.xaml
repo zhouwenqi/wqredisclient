@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:wqredisclient.components"
              mc:Ignorable="d" 
              d:DesignHeight="38" MinHeight="38" d:DesignWidth="300">
-    <Grid Background="{DynamicResource darkBackgroundBrush}">
+    <Grid SnapsToDevicePixels="True" Background="{DynamicResource darkBackgroundBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />

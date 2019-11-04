@@ -22,23 +22,21 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Border Background="{StaticResource primaryBrush}" Grid.ColumnSpan="2" Grid.Row="0" Grid.Column="0" />
-        <StackPanel Grid.ColumnSpan="2" Height="16" Orientation="Horizontal" Margin="10 0">
-            <wq:TopButton Width="16" Height="16" Margin="10 0" ToolTip="add connection" Icon="{StaticResource svgServerAdd}" />
-            <wq:TopButton Width="16" Height="16" Margin="10 0" ToolTip="import config"  Icon="{StaticResource svgImport}" />
-            <wq:TopButton Width="16" Height="16" Margin="10 0" ToolTip="export config"  Icon="{StaticResource svgExport}" />
-            <wq:TopButton Width="16" Height="16" Margin="10 0" ToolTip="add key"  Icon="{StaticResource svgAddKey}" />
-            <wq:TopButton Width="16" Height="16" Margin="10 0" ToolTip="refresh" Icon="{StaticResource svgRefresh}" />
-            <wq:TopButton Width="16" Height="16" Margin="10 0" ToolTip="save config" Icon="{StaticResource svgSave}" />
-            <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgDelete}" />
-            <wq:TopButton Width="16" Height="16" Margin="10 0"  Icon="{StaticResource svgSetup}" />
+        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal">
+            <wq:TopButton Margin="10 0 0 0" Width="40" Height="40" x:Name="btnAddConnection" Click="TopButton_Click" ToolTip="add connection" Icon="{StaticResource svgServerAdd}" />
+            <wq:TopButton Width="40" Height="40" x:Name="btnImportConfig" ToolTip="import config"  Icon="{StaticResource svgImport}" />
+            <wq:TopButton Width="40" Height="40" x:Name="btnExportConfig" ToolTip="export config"  Icon="{StaticResource svgExport}" />
+            <wq:TopButton Width="40" Height="40" ToolTip="refresh" Icon="{StaticResource svgRefresh}" />
+            <wq:TopButton Width="40" Height="40" ToolTip="save config" Icon="{StaticResource svgSave}" />
+            <wq:TopButton Width="40" Height="40" Icon="{StaticResource svgDelete}" />
+            <wq:TopButton Width="40" Height="40" Icon="{StaticResource svgSetup}" />
         </StackPanel>
         <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <CheckBox x:Name="checkTheme" Foreground="White" Margin="0 0 10 0" Click="checkTheme_Click" Content="{DynamicResource mThemeLabel}"></CheckBox>
-            <CheckBox x:Name="checkLanguage" Foreground="White" Margin="0 0 10 0" Click="checkLanguage_Click" Content="{DynamicResource mLanguageLabel}"></CheckBox>
+            <CheckBox x:Name="checkTheme" Foreground="White" Margin="0 0 10 0">Theme</CheckBox>
         </StackPanel>
         <Grid Grid.Row="1" Background="{DynamicResource darkBackgroundBrush}">
             <Grid.ColumnDefinitions>

@@ -23,32 +23,37 @@ namespace wqredisclient.components
     {
         private Geometry ico;
         private InputVaildStatus vaildStatus;
-        private bool isNeedInput = false;        
+        private bool isNeedInput = false;
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new PropertyMetadata(null));
         public InputBox()
         {
             InitializeComponent();            
         }
         /// <summary>
-        /// 输入字符
+        /// text content
         /// </summary>
         public String Text
         {
-            get { return input.Text; }
-            set { input.Text = value; }
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
         }
         /// <summary>
-        /// 标题
+        /// title
         /// </summary>
         public String Title
         {
             get { return label.Content.ToString(); }
             set { label.Content = value; }
         }
+        /// <summary>
+        /// svg ico
+        /// </summary>
         public Geometry Ico
         {
             get { return ico; }
             set { ico = value; icoPath.Data = ico;if (ico != null) { icoPath.Visibility = Visibility.Visible; } }
         }
+
         public bool IsNeedInput
         {
             get
@@ -73,7 +78,25 @@ namespace wqredisclient.components
                 setInputVaildStatus();
             }
         }
-
+        /// <summary>
+        /// isReadOnly
+        /// </summary>
+        public bool IsReadOnly
+        {
+            get
+            {
+                return this.input.IsReadOnly;
+            }
+            set
+            {
+                this.input.IsReadOnly = value;
+            }
+        }
+        /// <summary>
+        /// input change event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void input_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(input.Text.Trim()))
@@ -86,6 +109,9 @@ namespace wqredisclient.components
             }
         }
 
+        /// <summary>
+        /// vaild
+        /// </summary>
         private void setInputVaildStatus()
         {
             if (isNeedInput)

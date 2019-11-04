@@ -35,7 +35,7 @@
     <SolidColorBrush x:Key="shadowEffectBrush" Color="{StaticResource shadowEffectColor}" />
     <SolidColorBrush x:Key="dialogBackgroundBrush" Color="{StaticResource dialogBackgroundColor}" />
     <SolidColorBrush x:Key="darkBackgroundBrush" Color="{StaticResource darkBackgroundColor}" />
-    <SolidColorBrush x:Key="inputBackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="inputBackgroundBrush" Color="White" />    
     <SolidColorBrush x:Key="inputBorderBrush" Color="{StaticResource borderNormalColor}" />
     <SolidColorBrush x:Key="inputBorderLightBrush" Color="{StaticResource borderLightColor}" />
     <SolidColorBrush x:Key="redBrush" Color="{StaticResource redColor}" />

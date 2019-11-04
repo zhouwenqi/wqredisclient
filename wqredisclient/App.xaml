@@ -8,7 +8,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="theme/SvgSource.xaml" />
-                <ResourceDictionary Source="language/en_US.xaml" />
                 <ResourceDictionary Source="theme/light/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

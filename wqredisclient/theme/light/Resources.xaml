@@ -11,12 +11,43 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type wq:TopButton}">
                     <Border Background="Transparent">
-                        <Path Data="{TemplateBinding Icon}" Fill="White" Stretch="Fill" />
+                        <Path x:Name="icoPath" Width="16" Height="16" RenderTransformOrigin="0.5 0.5" Data="{TemplateBinding Icon}" Fill="White" Stretch="Fill">
+                            <Path.RenderTransform>
+                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                            </Path.RenderTransform>
+                        </Path>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="(RenderTransform).ScaleX" Storyboard.TargetName="icoPath" From="1" To="1.4" />
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="(RenderTransform).ScaleY" Storyboard.TargetName="icoPath" From="1" To="1.4" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="(RenderTransform).ScaleX" Storyboard.TargetName="icoPath" From="1.4" To="1" />
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="(RenderTransform).ScaleY" Storyboard.TargetName="icoPath" From="1.4" To="1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Click">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="(RenderTransform).ScaleX" Storyboard.TargetName="icoPath" From="1.4" To="1" />
+                                    <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="(RenderTransform).ScaleY" Storyboard.TargetName="icoPath" From="1.4" To="1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -527,7 +558,7 @@
                                 <DropShadowEffect Color="{DynamicResource shadowEffectColor}" Opacity="0" ShadowDepth="0" BlurRadius="0" />
                             </Border.Effect>
                         </Border>
-                        <Path x:Name="path" Grid.Column="0" Width="14" Height="14" Margin="14 0" Data="{TemplateBinding Ico}" Fill="{DynamicResource icoNormalBrush}" Stretch="Fill" />
+                        <Path x:Name="path" Grid.Column="0" Width="14" Height="14" Margin="14 0 4 0" Data="{TemplateBinding Ico}" Fill="{DynamicResource icoNormalBrush}" Stretch="Fill" />
                         <Label Foreground="{DynamicResource textBaseBrush}" Margin="0 0 14 0" VerticalContentAlignment="Center" Height="38" x:Name="content" Grid.Column="1" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Content="{TemplateBinding Content}" />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -551,6 +582,14 @@
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Opacity" Value="0.5" />
                         </Trigger>
+                        <Trigger Property="Ico" Value="{x:Null}">
+                            <Setter TargetName="path" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="content" Property="Margin" Value="14 0" />
+                        </Trigger>
+                        <Trigger Property="Content" Value="{x:Null}">
+                            <Setter TargetName="content" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="path" Property="Margin" Value="14 0" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -573,7 +612,7 @@
                                 <DropShadowEffect Color="{DynamicResource shadowEffectColor}" Opacity="0" ShadowDepth="0" BlurRadius="0" />
                             </Border.Effect>
                         </Border>
-                        <Path x:Name="path" Grid.Column="0" Width="16" Height="16" Margin="14 0" Data="{TemplateBinding Ico}" Fill="White" Stretch="Fill" />
+                        <Path x:Name="path" Grid.Column="0" Width="16" Height="16" Margin="14 0 4 0" Data="{TemplateBinding Ico}" Fill="White" Stretch="Fill" />
                         <Label Foreground="White" Margin="0 0 14 0" VerticalContentAlignment="Center" Height="38" x:Name="content" Grid.Column="1" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Content="{TemplateBinding Content}" />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -595,6 +634,106 @@
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Opacity" Value="0.3" />
+                        </Trigger>
+                        <Trigger Property="Ico" Value="{x:Null}">
+                            <Setter TargetName="path" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="content" Property="Margin" Value="14 0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- TabPanel style -->
+    <Style  TargetType="{x:Type TabControl}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Background="{StaticResource primaryBrush}" Grid.Row="0" Padding="20 0">
+                            <TabPanel Name="HeaderPanel" Panel.ZIndex="1" IsItemsHost="True" KeyboardNavigation.TabIndex="1" Background="Transparent" />
+                        </Border>                        
+                        <Border Name="Border" Grid.Row="1" Background="{DynamicResource inputBackgroundBrush}" BorderThickness="0" KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2" >
+                            <ContentPresenter Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type TabItem}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Grid Margin="0 20 0 0" SnapsToDevicePixels="True">
+                        <Border Name="Border" Background="Transparent" BorderThickness="0" >
+                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="14,6,14,6" RecognizesAccessKey="True"/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="100" />
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource inputBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource primaryBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- checkbox style -->
+    <Style x:Key="{x:Type CheckBox}" TargetType="CheckBox">
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="Foreground" Value="{DynamicResource textNormalBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <BulletDecorator Background="Transparent">
+                        <BulletDecorator.Bullet>
+                            <Border x:Name="border" Width="13" Height="13" Background="{DynamicResource inputBackgroundBrush}" BorderThickness="1" BorderBrush="{DynamicResource inputBorderBrush}">
+                                <Path Width="7" Height="7" x:Name="path" Visibility="Collapsed" Fill="{DynamicResource icoNormalBrush}" Stretch="Fill" Data="{StaticResource svgChecked}" />
+                                <Border.Effect>
+                                    <DropShadowEffect Color="{DynamicResource shadowEffectColor}" Opacity="0" ShadowDepth="0" BlurRadius="0" />
+                                </Border.Effect>
+                            </Border>
+                        </BulletDecorator.Bullet>
+                        <ContentPresenter Margin="4,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" RecognizesAccessKey="True"/>
+                    </BulletDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter TargetName="path" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter TargetName="path" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Effect" TargetName="border">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="{DynamicResource shadowEffectColor}" Opacity="0.2" ShadowDepth="1" BlurRadius="3" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource inputBorderLightBrush}" />
+                            <Setter Property="Fill" TargetName="path" Value="{DynamicResource icoLightBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Effect" TargetName="border">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="{DynamicResource shadowEffectColor}" Opacity="0" ShadowDepth="0" BlurRadius="0" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource dialogBackgroundBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" Value="0.5" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
