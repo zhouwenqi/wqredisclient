@@ -70,6 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="common\CompontentUtils.cs" />
     <Compile Include="common\ConfigUtils.cs" />
     <Compile Include="common\EnumUtils.cs" />
     <Compile Include="common\RedisKeyUtils.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="components\TextareaBox.xaml.cs">
       <DependentUpon>TextareaBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="convert\ValueTypeBoolConvert.cs" />
     <Compile Include="convert\CountBrushConvert.cs" />
     <Compile Include="convert\KeyIconConvert.cs" />
     <Compile Include="convert\BoolBrushConvert.cs" />
@@ -194,8 +196,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\csredis.dll" />
+    <Resource Include="lib\csredis.XML" />
     <Content Include="lib\log4net.dll" />
+    <Resource Include="lib\log4net.xml" />
     <Content Include="lib\Newtonsoft.Json.dll" />
+    <Resource Include="lib\Newtonsoft.Json.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

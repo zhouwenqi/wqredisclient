@@ -4,8 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:wqredisclient.components"
+             xmlns:ct="clr-namespace:wqredisclient.convert"
              mc:Ignorable="d" 
              d:DesignHeight="38" MinHeight="38" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ct:ValueTypeBoolConvert x:Key="valueTypeBoolConvert" />
+    </UserControl.Resources>
     <Grid SnapsToDevicePixels="True" Background="{DynamicResource darkBackgroundBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
@@ -31,7 +35,7 @@
                 <SolidColorBrush x:Name="icoRequiredBrush" Color="{DynamicResource icoNormalColor}" />
             </Path.Fill>
         </Path>
-        <TextBox Margin="6 0" MinHeight="38" Opacity="0.6" TextChanged="input_TextChanged" Height="38" VerticalContentAlignment="Center" x:Name="input" Grid.Column="1" Background="Transparent" BorderThickness="0" FontSize="12" SelectionBrush="{DynamicResource primaryBrush}" Foreground="{DynamicResource textNormalBrush}">            
+        <TextBox InputMethod.IsInputMethodEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type UserControl}},Path=ValueType,Converter={StaticResource valueTypeBoolConvert}}" PreviewTextInput="input_PreviewTextInput" Margin="6 0" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type UserControl}},Path=Text}" MinHeight="38" Opacity="0.6" TextChanged="input_TextChanged" Height="38" VerticalContentAlignment="Center" x:Name="input" Grid.Column="1" Background="Transparent" BorderThickness="0" FontSize="12" SelectionBrush="{DynamicResource primaryBrush}" Foreground="{DynamicResource textNormalBrush}">            
             <TextBox.Triggers>                
                 <EventTrigger RoutedEvent="UIElement.GotFocus">
                     <EventTrigger.Actions>                        

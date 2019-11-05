@@ -9,32 +9,75 @@ namespace wqredisclient.entity
     /// <summary>
     /// Redis Connection
     /// </summary>
-    public class RedisConnection
+    public class RedisConnection : BaseEntity
     {
-        private bool isUseSSL = false;
-        private bool isUseSSH = false;
-        private int connectionTimeOut = 60000;
-        private int executionTimeOut = 60000;
+        private string name;
+        private string host;
+        private string port = "6379";
+        private string auth;
+        private string keyPattern = "*";
+        private string keySeparator = ":";
+        private string connectionTimeOut = "60";
+        private string executionTimeOut = "60";
         /// <summary>
         /// Name
         /// </summary>
-        public string Name { get; set; }
+        public string Name {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                UpdateProperty(ref name, value);
+            }
+        }
         /// <summary>
         /// Host
         /// </summary>
-        public string Host { get; set; }
+        public string Host
+        {
+            get
+            {
+                return host;
+            }
+            set
+            {
+                UpdateProperty(ref host, value);
+            }
+        }
         /// <summary>
         /// Port
         /// </summary>
-        public int Port { get; set; }
+        public string Port
+        {
+            get
+            {
+                return port;
+            }
+            set
+            {
+                UpdateProperty(ref port, value);
+            }
+        }
         /// <summary>
         /// Auth
         /// </summary>
-        public string Auth { get; set; }
+        public string Auth
+        {
+            get
+            {
+                return auth;
+            }
+            set
+            {
+                UpdateProperty(ref auth, value);
+            }
+        }
         /// <summary>
         /// Connection Timeout
         /// </summary>
-        public int ConnectionTimeOut
+        public string ConnectionTimeOut
         {
             get
             {
@@ -42,13 +85,13 @@ namespace wqredisclient.entity
             }
             set
             {
-                connectionTimeOut = value;
+                UpdateProperty(ref connectionTimeOut, value);
             }
         }
         /// <summary>
         /// Execution Timeout
         /// </summary>
-        public int ExecutionTimeOut
+        public string ExecutionTimeOut
         {
             get
             {
@@ -56,81 +99,37 @@ namespace wqredisclient.entity
             }
             set
             {
-                executionTimeOut = value;
-            }
-        }        
-        /// <summary>
-        /// ssl
-        /// </summary>
-        public RedisSSL Ssl { set; get; }
-        /// <summary>
-        /// use protocol SSL
-        /// </summary>
-        public bool IsUseSSL {
-            get
-            {
-                return isUseSSL;
-            }
-            set
-            {
-                isUseSSL = value;
+                UpdateProperty(ref executionTimeOut, value);
             }
         }
         /// <summary>
-        /// ssh
+        /// Global style pattern
         /// </summary>
-        public RedisSSH Ssh { set; get; }
-        /// <summary>
-        /// use protocol SSH
-        /// </summary>
-        public bool IsUseSSH {
+        public string KeyPattern
+        {
             get
             {
-                return isUseSSH;
+                return keyPattern;
             }
             set
             {
-                isUseSSH = value;
+                UpdateProperty(ref keyPattern, value);
             }
         }
-    }
-    public class RedisSSL
-    {
         /// <summary>
-        /// public key
+        /// Namespace peparator
         /// </summary>
-        public string PublicKey { get; set; }
-        /// <summary>
-        /// private key
-        /// </summary>
-        public string PrivateKey { get; set; }
-        /// <summary>
-        /// authority
-        /// </summary>
-        public string Authority { get; set; }
-    }
-    public class RedisSSH
-    {
-        /// <summary>
-        /// remoto host
-        /// </summary>
-        public string RemotoHost { get; set; }
-        /// <summary>
-        /// remoto port
-        /// </summary>
-        public int RemotoPort { get; set; }
-        /// <summary>
-        /// username
-        /// </summary>
-        public string Username { get; set; }
-        /// <summary>
-        /// password
-        /// </summary>
-        public string Password { get; set; }
-        /// <summary>
-        /// private key
-        /// </summary>
-        public string PrivateKey { get; set; }
+        public string KeySeparator
+        {
+            get
+            {
+                return keySeparator;
+            }
+            set
+            {
+                UpdateProperty(ref keySeparator, value);
+            }
+        }
     }
 
 }

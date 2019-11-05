@@ -12,4 +12,13 @@ namespace wqredisclient.common
         Yes = 1,
         No = 2
     }
+    public enum InputValueType
+    {
+        Text = 0,
+        Letter = 1,
+        Number = 2,
+        Integer = 3,
+        Email = 4,
+        Ip = 5
+    }
 }

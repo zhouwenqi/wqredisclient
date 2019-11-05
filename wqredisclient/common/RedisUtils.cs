@@ -12,7 +12,9 @@ namespace wqredisclient.common
     {
         public static void addConnection(RedisConnection connection)
         {
-            RedisClient redisClient = new RedisClient(connection.Host, connection.Port);
+            RedisClient redisClient = new RedisClient(connection.Host, Convert.ToInt32(connection.Port));
+            
+                       
             RedisServer redisServer = new RedisServer { Connection = connection };            
             redisServer.RedisClient = redisClient;
             App.redisServers.Add(redisServer);

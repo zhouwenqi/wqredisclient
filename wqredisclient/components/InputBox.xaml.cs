@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using wqredisclient.common;
+using System.Text.RegularExpressions;
 
 namespace wqredisclient.components
 {
@@ -24,7 +25,9 @@ namespace wqredisclient.components
         private Geometry ico;
         private InputVaildStatus vaildStatus;
         private bool isNeedInput = false;
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(InputBox), new FrameworkPropertyMetadata(null) { BindsTwoWayByDefault = true });
+        public static readonly DependencyProperty ValueTypeProperty = DependencyProperty.Register("ValueType", typeof(InputValueType), typeof(InputBox), new PropertyMetadata(InputValueType.Text));
+        public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register("DefaultValue", typeof(string), typeof(InputBox), new FrameworkPropertyMetadata(null) { BindsTwoWayByDefault = true });
         public InputBox()
         {
             InitializeComponent();            
@@ -36,6 +39,20 @@ namespace wqredisclient.components
         {
             get { return (string)GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
+        }
+        /// <summary>
+        /// default text
+        /// </summary>
+        public String DefaultValue
+        {
+            get
+            {
+                return (string)GetValue(DefaultValueProperty);
+            }
+            set
+            {
+                SetValue(DefaultValueProperty, value);
+            }
         }
         /// <summary>
         /// title
@@ -78,6 +95,16 @@ namespace wqredisclient.components
                 setInputVaildStatus();
             }
         }
+        public InputValueType ValueType
+        {
+            get{
+                return (InputValueType)GetValue(ValueTypeProperty);
+            }
+            set
+            {
+                SetValue(ValueTypeProperty, value);                
+            }
+        }
         /// <summary>
         /// isReadOnly
         /// </summary>
@@ -98,7 +125,7 @@ namespace wqredisclient.components
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void input_TextChanged(object sender, TextChangedEventArgs e)
-        {
+        {            
             if (string.IsNullOrEmpty(input.Text.Trim()))
             {
                 label.Visibility = Visibility.Visible;
@@ -106,7 +133,7 @@ namespace wqredisclient.components
             else
             {
                 label.Visibility = Visibility.Hidden;
-            }
+            }            
         }
 
         /// <summary>
@@ -130,6 +157,19 @@ namespace wqredisclient.components
                 default:
                     icoRequired.Fill = (SolidColorBrush)App.Current.FindResource("icoNormalBrush");
                     break;
+            }
+        }
+
+        private void input_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (ValueType == InputValueType.Integer)
+            {
+                Regex re = new Regex("[^0-9]+");
+                e.Handled = re.IsMatch(e.Text);
+            }else if(ValueType == InputValueType.Number)
+            {
+                Regex re = new Regex("[^0-9.]+");
+                e.Handled = re.IsMatch(e.Text);
             }
         }
     }

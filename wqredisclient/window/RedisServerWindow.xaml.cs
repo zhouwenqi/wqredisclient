@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using wqredisclient.entity;
+using wqredisclient.common;
+using wqredisclient.components;
 
 namespace wqredisclient.window
 {
@@ -20,17 +22,73 @@ namespace wqredisclient.window
     /// </summary>
     public partial class RedisServerWindow : Window
     {
-        public RedisServer redisServer;
+        public RedisConnection redisConnection;
         public RedisServerWindow()
         {
             InitializeComponent();
-            redisServer = new RedisServer();
-            this.DataContext = redisServer;
+            if(null == redisConnection)
+            {
+                redisConnection = new RedisConnection();                
+                this.Title = "add redis server";
+            }else
+            {
+                this.Title = "edit redis server";
+            }
+            this.DataContext = redisConnection;
         }
 
+        /// <summary>
+        /// click cancel button event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        /// <summary>
+        /// window load event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {            
+            Console.WriteLine("init over...");
+        }
+
+        /// <summary>
+        /// click save button event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            saveRedisServer();
+        }
+
+        /// <summary>
+        /// save redis server
+        /// </summary>
+        private void saveRedisServer()
+        {
+            if(CompontentUtils.vaildInputBox(name)
+                && CompontentUtils.vaildInputBox(host)
+                && CompontentUtils.vaildInputBox(port)
+                && CompontentUtils.vaildInputBox(keyPattern)
+                && CompontentUtils.vaildInputBox(keySeparator)
+                && CompontentUtils.vaildInputBox(connectionTimeout)
+                && CompontentUtils.vaildInputBox(executeTimeout))
+            {                
+                App.config.RedisConnections.Add(redisConnection);
+                RedisUtils.addConnection(redisConnection);               
+                ConfigUtils.saveConfig();
+                this.Close();
+            }
+            else
+            {
+                Console.WriteLine("false");
+            }
         }
     }
 }
