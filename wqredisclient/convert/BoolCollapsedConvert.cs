@@ -18,7 +18,7 @@ namespace wqredisclient.convert
             {
                 return DependencyProperty.UnsetValue;
             }
-            bool isVisable = (bool)value;
+            bool isVisable = value == null ? false : (bool)value;            
             return isVisable ? Visibility.Collapsed : Visibility.Visible;
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

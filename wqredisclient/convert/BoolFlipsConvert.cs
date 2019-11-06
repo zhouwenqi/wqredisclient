@@ -7,10 +7,11 @@ using System.Windows.Data;
 using System.Globalization;
 using System.Windows.Shapes;
 using System.Windows;
+using System.Windows.Media;
 
 namespace wqredisclient.convert
 {
-    public class BoolVisibleConvert : IValueConverter
+    public class BoolFlipsConvert : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -18,8 +19,8 @@ namespace wqredisclient.convert
             {
                 return DependencyProperty.UnsetValue;
             }
-            bool isVisable = value == null ? false : (bool)value;
-            return isVisable ? Visibility.Visible : Visibility.Collapsed;
+            bool isSuccess = value == null ? false : (bool)value;
+            return !isSuccess;
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -27,8 +28,8 @@ namespace wqredisclient.convert
             {
                 return false;
             }
-            Visibility visible = (Visibility)value;
-            return visible == Visibility.Visible ? true : false;
+            bool isSuccess = (bool)value;
+            return !isSuccess;
         }
 
     }

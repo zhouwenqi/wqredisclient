@@ -84,12 +84,17 @@
     <Compile Include="components\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>
+    <Compile Include="components\MenuElement.xaml.cs">
+      <DependentUpon>MenuElement.xaml</DependentUpon>
+    </Compile>
     <Compile Include="components\SearchKeyBox.xaml.cs">
       <DependentUpon>SearchKeyBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="components\TextareaBox.xaml.cs">
       <DependentUpon>TextareaBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="convert\BoolFlipsConvert.cs" />
+    <Compile Include="convert\CountVisibleConvert.cs" />
     <Compile Include="convert\ValueTypeBoolConvert.cs" />
     <Compile Include="convert\CountBrushConvert.cs" />
     <Compile Include="convert\KeyIconConvert.cs" />
@@ -124,6 +129,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="components\Loading.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="components\MenuElement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -28,7 +28,7 @@ namespace wqredisclient.window
             InitializeComponent();
             if(null == redisConnection)
             {
-                redisConnection = new RedisConnection();                
+                redisConnection = new RedisConnection();   
                 this.Title = "add redis server";
             }else
             {

@@ -312,8 +312,8 @@
                         <Border Name="Bd" Grid.Column="0" Grid.ColumnSpan="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter Width="{TemplateBinding ActualWidth}" x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
                         </Border>
-                        <ToggleButton Margin="12 0 12 0" Grid.Column="0" x:Name="expander" Style="{StaticResource fieldToggleStyle}" IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
-                        <Path Margin="12 0 12 0" Visibility="Collapsed" Fill="{StaticResource icoNormalBrush}" Grid.Column="0" Stretch="Fill" Width="14" Height="14" x:Name="keyIcon" Data="{StaticResource svgKey}" />
+                        <ToggleButton Margin="16 0" Grid.Column="0" x:Name="expander" Style="{StaticResource fieldToggleStyle}" IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                        <Path Margin="16 0" Visibility="Collapsed" Fill="{StaticResource icoNormalBrush}" Grid.Column="0" Stretch="Fill" Width="14" Height="14" x:Name="keyIcon" Data="{StaticResource svgKey}" />
                         <ItemsPresenter Margin="-4 0 0 0" x:Name="ItemsHost" Grid.Row="1" Grid.Column="1"  />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -740,4 +740,66 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!-- ContextMenu style -->
+    <Style TargetType="{x:Type ContextMenu}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Grid.IsSharedSizeScope" Value="true"/>
+        <Setter Property="HasDropShadow" Value="True"/>
+        
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border Margin="8"  Name="Border" Background="White">
+                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                        <Border.Effect>
+                            <DropShadowEffect Color="{DynamicResource shadowEffectColor}" Opacity="0.2" ShadowDepth="0" BlurRadius="8" />
+                        </Border.Effect>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasDropShadow" Value="true">
+                            <Setter TargetName="Border" Property="Padding" Value="0,3,0,3"/>
+                            <Setter TargetName="Border" Property="CornerRadius" Value="10"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type wq:MenuElement}">
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type wq:MenuElement}">
+                    <Grid SnapsToDevicePixels="True" Height="34">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="36" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="border" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent" />
+                        <Path x:Name="icoPath" Data="{TemplateBinding SvgIcon}" Fill="{TemplateBinding IcoBrush}" Stretch="Fill" Width="14" Height="14" />
+                        <TextBlock x:Name="text" Margin="4 0 16 0" TextAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Text="{TemplateBinding Header}" Foreground="{DynamicResource textNormalBrush}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource primaryBrush}" />
+                            <Setter TargetName="text" Property="Foreground" Value="White" />
+                            <Setter TargetName="icoPath" Property="Fill" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Opacity" Value="0.6" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" Value="0.4" />
+                        </Trigger>
+                        <Trigger Property="SvgIcon" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" TargetName="icoPath" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>

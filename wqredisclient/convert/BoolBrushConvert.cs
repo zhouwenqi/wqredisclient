@@ -19,7 +19,7 @@ namespace wqredisclient.convert
             {
                 return DependencyProperty.UnsetValue;
             }
-            bool isSuccess = (bool)value;
+            bool isSuccess = value == null ? false : (bool)value;
             SolidColorBrush primaryBrush = (SolidColorBrush)Application.Current.FindResource("primaryBrush");
             SolidColorBrush icoLightBrush = (SolidColorBrush)Application.Current.FindResource("icoNormalBrush");
             return isSuccess ? primaryBrush : icoLightBrush;

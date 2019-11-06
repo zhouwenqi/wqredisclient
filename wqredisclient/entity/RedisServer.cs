@@ -56,5 +56,6 @@ namespace wqredisclient.entity
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        public string Uid { get; set; }
     }
 }

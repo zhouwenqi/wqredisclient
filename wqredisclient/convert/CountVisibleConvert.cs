@@ -7,29 +7,24 @@ using System.Windows.Data;
 using System.Globalization;
 using System.Windows.Shapes;
 using System.Windows;
+using System.Windows.Media;
 
 namespace wqredisclient.convert
 {
-    public class BoolVisibleConvert : IValueConverter
+    class CountVisibleConvert : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value == null)
+            if (value == null)
             {
                 return DependencyProperty.UnsetValue;
             }
-            bool isVisable = value == null ? false : (bool)value;
-            return isVisable ? Visibility.Visible : Visibility.Collapsed;
+            int count = (int)value;            
+            return count > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
-            {
-                return false;
-            }
-            Visibility visible = (Visibility)value;
-            return visible == Visibility.Visible ? true : false;
+            return 0;
         }
-
     }
 }

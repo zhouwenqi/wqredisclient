@@ -15,7 +15,9 @@
         <ct:BoolCollapsedConvert x:Key="boolCollapsedConvert" />
         <ct:BoolBrushConvert x:Key="boolBrushConvert" />
         <ct:CountBrushConvert x:Key="countBrushConvert" />
-    </Window.Resources>
+        <ct:BoolFlipsConvert x:Key="boolFlipsConvert" />
+        <ct:CountVisibleConvert x:Key="countVisibleConvert" />
+    </Window.Resources>    
     <Grid SnapsToDevicePixels="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -29,11 +31,8 @@
         <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal">
             <wq:TopButton Margin="10 0 0 0" Width="40" Height="40" x:Name="btnAddConnection" Click="TopButton_Click" ToolTip="add connection" Icon="{StaticResource svgServerAdd}" />
             <wq:TopButton Width="40" Height="40" x:Name="btnImportConfig" ToolTip="import config"  Icon="{StaticResource svgImport}" />
-            <wq:TopButton Width="40" Height="40" x:Name="btnExportConfig" ToolTip="export config"  Icon="{StaticResource svgExport}" />
-            <wq:TopButton Width="40" Height="40" ToolTip="refresh" Icon="{StaticResource svgRefresh}" />
-            <wq:TopButton Width="40" Height="40" ToolTip="save config" Icon="{StaticResource svgSave}" />
-            <wq:TopButton Width="40" Height="40" Icon="{StaticResource svgDelete}" />
-            <wq:TopButton Width="40" Height="40" Icon="{StaticResource svgSetup}" />
+            <wq:TopButton Width="40" Height="40" x:Name="btnExportConfig" ToolTip="export config"  Icon="{StaticResource svgExport}" />   
+            <wq:TopButton Width="40" ToolTip="setup" Height="40" Icon="{StaticResource svgSetup}" />
         </StackPanel>
         <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.ColumnSpan="2" Orientation="Horizontal">
             <CheckBox x:Name="checkTheme" Foreground="White" Margin="0 0 10 0">Theme</CheckBox>
@@ -54,7 +53,16 @@
                                 <Path Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource boolCollapsedConvert}}" Width="14"  Height="14" Fill="{Binding Path=IsConnectioned,Converter={StaticResource boolBrushConvert}}" Data="{StaticResource svgServer}" Stretch="Fill"></Path>
                                 <wq:Loading Margin="0 0 8 0" Visibility="{Binding Path=IsConnectioning,Converter={StaticResource boolVisibleConvert}}"  Width="14" Height="14" Fill="{DynamicResource icoNormalBrush}"></wq:Loading>
                                 <TextBlock Text="{Binding Connection.Name}" />
-                            </StackPanel>                            
+                            </StackPanel>
+                            <Border.ContextMenu>
+                                <ContextMenu Tag="{Binding Uid}">
+                                    <wq:MenuElement Click="MenuElement_Server_Click" IsEnabled="{Binding Path=IsConnectioning,Converter={StaticResource boolFlipsConvert}}" IcoBrush="{StaticResource greenBrush}" Header="Connection" Visibility="{Binding Path=IsConnectioned,Converter={StaticResource boolCollapsedConvert}}" SvgIcon="{StaticResource svgConnection}" />
+                                    <wq:MenuElement Click="MenuElement_Server_Click" Header="Disconnection" Visibility="{Binding Path=IsConnectioned,Converter={StaticResource boolVisibleConvert}}" SvgIcon="{StaticResource svgStop}" />
+                                    <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource primaryBrush}" Header="Reload" SvgIcon="{StaticResource svgRefresh}" />
+                                    <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource primaryBrush}" Header="Edit" SvgIcon="{StaticResource svgEdit}" />
+                                    <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource redBrush}" Header="Delete" SvgIcon="{StaticResource svgDelete}" />
+                                </ContextMenu>
+                            </Border.ContextMenu>
                         </Border>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type et:RedisDatabase}">
@@ -65,10 +73,21 @@
                                 </Path>
                                 <TextBlock x:Name="dbName" Text="{Binding Name}" />
                                 <TextBlock Margin="4 0 0 0" Foreground="{DynamicResource icoNormalBrush}" Text="{Binding Path = KeyCount, StringFormat='({0})'}" />                               
-                            </StackPanel>                           
+                            </StackPanel>
+                            <Border.ContextMenu>
+                                <ContextMenu>
+                                    <wq:MenuElement IcoBrush="{StaticResource primaryBrush}" Header="Add key" SvgIcon="{StaticResource svgAddKey}" />
+                                    <wq:MenuElement IcoBrush="{StaticResource primaryBrush}" Header="Reload" SvgIcon="{StaticResource svgRefresh}" />
+                                </ContextMenu>
+                            </Border.ContextMenu>
                         </Border>
                     </HierarchicalDataTemplate>
-                </TreeView.Resources>                
+                </TreeView.Resources>
+                <TreeView.ContextMenu>
+                    <ContextMenu>
+                        <wq:MenuElement IcoBrush="{StaticResource primaryBrush}" Header="Add connection" SvgIcon="{StaticResource svgServerAdd}" />
+                    </ContextMenu>
+                </TreeView.ContextMenu>
             </TreeView>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
@@ -83,7 +102,8 @@
                         <HierarchicalDataTemplate DataType="{x:Type et:RedisKey}" ItemsSource="{Binding Keys}">
                         <Border Background="Transparent" Padding="10 6">
                             <StackPanel Orientation="Horizontal">                                
-                                <TextBlock Margin="24 0 0 0" ToolTip="{Binding Key}" Text="{Binding Name}" />
+                                <TextBlock Margin="28 0 0 0" ToolTip="{Binding Key}" Text="{Binding Name}" />
+                                <TextBlock Margin="4 0 0 0" Visibility="{Binding Path=Keys.Count,Converter={StaticResource countVisibleConvert}}" Foreground="{DynamicResource icoNormalBrush}" Text="{Binding Path = Keys.Count, StringFormat='({0})'}" />
                             </StackPanel>                            
                         </Border>
                     </HierarchicalDataTemplate>
@@ -103,7 +123,7 @@
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <wq:InputBox Grid.Column="0" x:Name="inputKey" IsNeedInput="True" Ico="{StaticResource svgKey}" Title="input key" />
-                <ComboBox Grid.Column="1" Margin="10 0 0 0">
+                <ComboBox SelectedIndex="0" Grid.Column="1" Margin="10 0 0 0">
                     <ComboBoxItem>Text plain</ComboBoxItem>
                     <ComboBoxItem>Json</ComboBoxItem>
                     <ComboBoxItem>Hex</ComboBoxItem>

@@ -12,15 +12,14 @@ namespace wqredisclient.common
     {
         public static void addConnection(RedisConnection connection)
         {
-            RedisClient redisClient = new RedisClient(connection.Host, Convert.ToInt32(connection.Port));
-            
-                       
-            RedisServer redisServer = new RedisServer { Connection = connection };            
+            RedisClient redisClient = new RedisClient(connection.Host, Convert.ToInt32(connection.Port)); 
+            RedisServer redisServer = new RedisServer { Connection = connection,Uid=Guid.NewGuid().ToString()};            
             redisServer.RedisClient = redisClient;
+            redisServer.RedisClient.Encoding = Encoding.UTF8;           
             App.redisServers.Add(redisServer);
         }
         /// <summary>
-        /// get redis object
+        /// get redis-server by client
         /// </summary>
         /// <param name="redisClient"></param>
         /// <returns></returns>
@@ -29,6 +28,22 @@ namespace wqredisclient.common
             foreach(RedisServer redisServer in App.redisServers)
             {
                 if (redisServer.RedisClient.GetHashCode() == redisClient.GetHashCode())
+                {
+                    return redisServer;
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// find redis-server by uid
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        public static RedisServer getRedisServer(string uid)
+        {
+            foreach (RedisServer redisServer in App.redisServers)
+            {
+                if (redisServer.Uid.Equals(uid))
                 {
                     return redisServer;
                 }

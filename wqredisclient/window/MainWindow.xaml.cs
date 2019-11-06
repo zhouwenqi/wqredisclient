@@ -35,36 +35,7 @@ namespace wqredisclient.window
         {
             InitializeComponent();    
         }
-
-        private void testConnlist()
-        {
-            RedisConnection conn1 = new RedisConnection();
-            conn1.Name = "localhost";
-            conn1.Port = "6379";
-            conn1.Host = "192.168.3.83";
-            RedisServer s1 = new RedisServer();
-            s1.Connection = conn1;
-
-            RedisConnection conn2 = new RedisConnection();
-            conn2.Name = "192.168.1.51";
-            conn2.Port = "6379";
-            conn2.Host = "192.168.1.51";
-            RedisServer s2 = new RedisServer();
-            s2.Connection = conn2;
-
-            RedisConnection conn3 = new RedisConnection();
-            conn3.Name = "192.168.3.220";
-            conn3.Port = "6379";
-            conn3.Host = "192.168.3.220";
-            RedisServer s3 = new RedisServer();
-            s3.Connection = conn3;
-
-
-
-            App.config.RedisConnections.Add(conn1);
-            App.config.RedisConnections.Add(conn2);
-            App.config.RedisConnections.Add(conn3);
-        }
+        
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -75,7 +46,11 @@ namespace wqredisclient.window
         {
             App.config.RedisConnections.ForEach((connection) => {                
                 RedisUtils.addConnection(connection);
-            });            
+            });    
+            for(int i=0;i<App.redisServers.Count;i++)
+            {
+                App.redisServers[i].RedisClient.Connected += RedisClient_Connected;
+            }
 
             redisServerBox.Items.Clear();
             this.Dispatcher.Invoke(new Action(delegate
@@ -86,6 +61,11 @@ namespace wqredisclient.window
             
         }
 
+        /// <summary>
+        /// redis server select-item event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void redisServerBox_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             selectDatabaseItem = (TreeViewItem)redisServerBox.ItemContainerGenerator.ContainerFromItem(e.NewValue);
@@ -123,8 +103,8 @@ namespace wqredisclient.window
         /// <param name="redisServer"></param>
         private void redisConnecton(RedisServer redisServer)
         {
-            CSRedis.RedisClient redisClient = redisServer.RedisClient;
-            redisClient.Connected += RedisClient_Connected;     
+            CSRedis.RedisClient redisClient = redisServer.RedisClient;            
+            // redisClient.Connected += RedisClient_Connected;     
             if (!redisClient.IsConnected)
             {
                 try
@@ -258,5 +238,71 @@ namespace wqredisclient.window
                     break;
             }
         }
+
+        /// <summary>
+        /// server context-menu item click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuElement_Server_Click(object sender, RoutedEventArgs e)
+        {            
+            MenuElement item = (MenuElement)sender;
+            ContextMenu menu = (ContextMenu)item.Parent;
+            string uid = (string)menu.Tag;
+            RedisServer redisServer = RedisUtils.getRedisServer(uid);
+            if(null == redisServer)
+            {
+                return;
+            }
+            TreeViewItem viewItem = (TreeViewItem)redisServerBox.ItemContainerGenerator.ContainerFromItem(redisServer);
+            switch (item.Header.ToString())
+            {
+                case "Connection":
+                case "Reload":                    
+                    redisConnecton(redisServer);
+                    break;
+                case "Disconnection":
+                    if (redisServer.RedisClient.IsConnected)
+                    {
+                        redisServer.RedisClient.Quit();
+                        Console.WriteLine("status:" + redisServer.RedisClient.IsConnected);
+                        redisServer.IsConnectioned = redisServer.RedisClient.IsConnected;
+                    }
+                    redisServer.Databases.Clear();
+                    break;
+                default:
+                    break;
+                
+            }
+        }
+        private void redisRestconnection(RedisServer redisServer)
+        {
+            redisServer.IsConnectioning = true;
+            if (redisServer.RedisClient.IsConnected)
+            {
+                redisServer.RedisClient.Quit();
+            }
+           
+            ThreadStart threadStart = new ThreadStart(() =>
+            {
+                redisConnecton(redisServer);
+            });
+            new Thread(threadStart).Start();
+        }
+
+        private void databaseMenu_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            string uid = e.Parameter.ToString();
+            RedisServer redisServer = RedisUtils.getRedisServer(uid);
+            if(null != redisServer)
+            {
+                if (redisServer.RedisClient.IsConnected)
+                {
+                    redisServer.RedisClient.Dispose();
+                }
+                redisConnecton(redisServer);
+            }
+        }
+        
     }
 }
