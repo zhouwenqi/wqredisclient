@@ -18,11 +18,21 @@ namespace wqredisclient.entity
         private bool isConnectioned = false;
         private ObservableCollection<RedisDatabase> databases = new ObservableCollection<RedisDatabase>();
         private CSRedis.RedisClient redisClient;
+        private RedisConnection connection;
         public ObservableCollection<RedisDatabase> Databases {
             get { return this.databases; }
             set { UpdateProperty(ref databases,value); }
         }
-        public RedisConnection Connection { get; set; }
+        public RedisConnection Connection {
+            get
+            {
+                return connection;
+            }
+            set
+            {
+                UpdateProperty(ref connection, value);
+            }
+        }
         public CSRedis.RedisClient RedisClient {
             set { UpdateProperty(ref redisClient, value); }
             get { return redisClient; }

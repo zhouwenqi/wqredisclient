@@ -103,13 +103,13 @@ namespace wqredisclient.window
         /// <param name="redisServer"></param>
         private void redisConnecton(RedisServer redisServer)
         {
-            CSRedis.RedisClient redisClient = redisServer.RedisClient;            
-            // redisClient.Connected += RedisClient_Connected;     
+            CSRedis.RedisClient redisClient = redisServer.RedisClient;  
             if (!redisClient.IsConnected)
             {
                 try
                 {
                     int connectionTimeOut = Convert.ToInt32(redisServer.Connection.ConnectionTimeOut);
+                    Console.WriteLine("host:"+redisClient.Host+",port:" + redisClient.Port);
                     redisClient.Connect(connectionTimeOut);
                 }catch(Exception e)
                 {
@@ -166,7 +166,10 @@ namespace wqredisclient.window
             redisServer.IsConnectioned = true;
             this.Dispatcher.Invoke(new Action(delegate
             {
-                selectDatabaseItem.IsExpanded = true;
+                if (selectDatabaseItem != null)
+                {
+                    selectDatabaseItem.IsExpanded = true;
+                }                
             }));
         }
 
@@ -258,21 +261,27 @@ namespace wqredisclient.window
             switch (item.Header.ToString())
             {
                 case "Connection":
-                case "Reload":                    
-                    redisConnecton(redisServer);
+                case "Reload":
+                    redisRestconnection(redisServer);
                     break;
                 case "Disconnection":
-                    if (redisServer.RedisClient.IsConnected)
-                    {
-                        redisServer.RedisClient.Quit();
-                        Console.WriteLine("status:" + redisServer.RedisClient.IsConnected);
-                        redisServer.IsConnectioned = redisServer.RedisClient.IsConnected;
-                    }
-                    redisServer.Databases.Clear();
+                    redisQuitConnection(redisServer);
+                    break;
+                case "Delete":
+                    redisQuitConnection(redisServer);
+                    redisServer.RedisClient.Dispose();                  
+                    App.redisServers.Remove(redisServer);                    
+                    ConfigUtils.saveConfig();
+                    break;
+                case "Edit":
+                    redisQuitConnection(redisServer);
+                    RedisServerWindow editServerWindow = new RedisServerWindow();
+                    RedisConnection conn = (RedisConnection)redisServer.Connection.Clone();
+                    editServerWindow.Server = redisServer;                    
+                    editServerWindow.ShowDialog();                   
                     break;
                 default:
-                    break;
-                
+                    break;                
             }
         }
         private void redisRestconnection(RedisServer redisServer)
@@ -289,7 +298,15 @@ namespace wqredisclient.window
             });
             new Thread(threadStart).Start();
         }
-
+        private void redisQuitConnection(RedisServer redisServer)
+        {
+            if (redisServer.RedisClient.IsConnected)
+            {
+                redisServer.RedisClient.Quit();
+                redisServer.Databases.Clear();
+            }
+            redisServer.IsConnectioned = redisServer.RedisClient.IsConnected;
+        }
         private void databaseMenu_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             string uid = e.Parameter.ToString();

@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace wqredisclient.entity
 {
-    public class BaseEntity : INotifyPropertyChanged
+    public class BaseEntity : INotifyPropertyChanged, ICloneable
     {
         public void UpdateProperty<T>(ref T properValue, T newValue, [CallerMemberName] string propertyName = "")
         {
@@ -29,6 +29,10 @@ namespace wqredisclient.entity
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

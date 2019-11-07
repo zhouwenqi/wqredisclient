@@ -22,20 +22,15 @@ namespace wqredisclient.window
     /// </summary>
     public partial class RedisServerWindow : Window
     {
-        public RedisConnection redisConnection;
+        private RedisConnection redisConnection;
+        private bool isNew = true;
+     
         public RedisServerWindow()
         {
             InitializeComponent();
-            if(null == redisConnection)
-            {
-                redisConnection = new RedisConnection();   
-                this.Title = "add redis server";
-            }else
-            {
-                this.Title = "edit redis server";
-            }
-            this.DataContext = redisConnection;
+            redisConnection = new RedisConnection();            
         }
+        public RedisServer Server { get; set; }
 
         /// <summary>
         /// click cancel button event
@@ -53,8 +48,18 @@ namespace wqredisclient.window
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {            
-            Console.WriteLine("init over...");
+        {
+            if (Server == null)
+            {
+                this.Title = "add redis server";
+            }
+            else
+            {
+                isNew = false;
+                this.Title = "edit redis server";
+                redisConnection = (RedisConnection)Server.Connection.Clone();
+            }
+            this.DataContext = redisConnection;
         }
 
         /// <summary>
@@ -79,10 +84,17 @@ namespace wqredisclient.window
                 && CompontentUtils.vaildInputBox(keySeparator)
                 && CompontentUtils.vaildInputBox(connectionTimeout)
                 && CompontentUtils.vaildInputBox(executeTimeout))
-            {                
-                App.config.RedisConnections.Add(redisConnection);
-                RedisUtils.addConnection(redisConnection);               
-                ConfigUtils.saveConfig();
+            {
+                
+                if (isNew)
+                {
+                    App.config.RedisConnections.Add(redisConnection);
+                    RedisUtils.addConnection(redisConnection);
+                }else
+                {
+                    RedisUtils.updateConnection(Server, redisConnection);
+                }
+                ConfigUtils.updateConfig();
                 this.Close();
             }
             else

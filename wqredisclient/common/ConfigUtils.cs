@@ -47,5 +47,14 @@ namespace wqredisclient.common
         {
             saveConfig(App.config);
         }
+        public static void updateConfig()
+        {
+            App.config.RedisConnections.Clear();
+            foreach(RedisServer server in App.redisServers)
+            {
+                App.config.RedisConnections.Add(server.Connection);
+            }
+            saveConfig();
+        }
     }
 }

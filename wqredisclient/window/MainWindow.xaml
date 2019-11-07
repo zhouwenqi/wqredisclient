@@ -55,8 +55,8 @@
                                 <TextBlock Text="{Binding Connection.Name}" />
                             </StackPanel>
                             <Border.ContextMenu>
-                                <ContextMenu Tag="{Binding Uid}">
-                                    <wq:MenuElement Click="MenuElement_Server_Click" IsEnabled="{Binding Path=IsConnectioning,Converter={StaticResource boolFlipsConvert}}" IcoBrush="{StaticResource greenBrush}" Header="Connection" Visibility="{Binding Path=IsConnectioned,Converter={StaticResource boolCollapsedConvert}}" SvgIcon="{StaticResource svgConnection}" />
+                                <ContextMenu IsEnabled="{Binding Path=IsConnectioning,Converter={StaticResource boolFlipsConvert}}"  Tag="{Binding Uid}">
+                                    <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource greenBrush}" Header="Connection" Visibility="{Binding Path=IsConnectioned,Converter={StaticResource boolCollapsedConvert}}" SvgIcon="{StaticResource svgConnection}" />
                                     <wq:MenuElement Click="MenuElement_Server_Click" Header="Disconnection" Visibility="{Binding Path=IsConnectioned,Converter={StaticResource boolVisibleConvert}}" SvgIcon="{StaticResource svgStop}" />
                                     <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource primaryBrush}" Header="Reload" SvgIcon="{StaticResource svgRefresh}" />
                                     <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource primaryBrush}" Header="Edit" SvgIcon="{StaticResource svgEdit}" />
