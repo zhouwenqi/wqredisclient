@@ -55,12 +55,12 @@
                                 <TextBlock Text="{Binding Connection.Name}" />
                             </StackPanel>
                             <Border.ContextMenu>
-                                <ContextMenu IsEnabled="{Binding Path=IsConnectioning,Converter={StaticResource boolFlipsConvert}}"  Tag="{Binding Uid}">
-                                    <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource greenBrush}" Header="Connection" Visibility="{Binding Path=IsConnectioned,Converter={StaticResource boolCollapsedConvert}}" SvgIcon="{StaticResource svgConnection}" />
-                                    <wq:MenuElement Click="MenuElement_Server_Click" Header="Disconnection" Visibility="{Binding Path=IsConnectioned,Converter={StaticResource boolVisibleConvert}}" SvgIcon="{StaticResource svgStop}" />
-                                    <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource primaryBrush}" Header="Reload" SvgIcon="{StaticResource svgRefresh}" />
-                                    <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource primaryBrush}" Header="Edit" SvgIcon="{StaticResource svgEdit}" />
-                                    <wq:MenuElement Click="MenuElement_Server_Click" IcoBrush="{StaticResource redBrush}" Header="Delete" SvgIcon="{StaticResource svgDelete}" />
+                                <ContextMenu Tag="{Binding Uid}">
+                                    <wq:MenuElement IsEnabled="{Binding Path=IsConnectioning,Converter={StaticResource boolFlipsConvert}}" Click="MenuElement_Server_Click" IcoBrush="{StaticResource greenBrush}" Header="Connection" Visibility="{Binding Path=IsConnectioned,Converter={StaticResource boolCollapsedConvert}}" SvgIcon="{StaticResource svgConnection}" />
+                                    <wq:MenuElement IsEnabled="{Binding Path=IsConnectioning,Converter={StaticResource boolFlipsConvert}}" Click="MenuElement_Server_Click" Header="Disconnection" Visibility="{Binding Path=IsConnectioned,Converter={StaticResource boolVisibleConvert}}" SvgIcon="{StaticResource svgStop}" />
+                                    <wq:MenuElement IsEnabled="{Binding Path=IsConnectioning,Converter={StaticResource boolFlipsConvert}}" Click="MenuElement_Server_Click" IcoBrush="{StaticResource primaryBrush}" Header="Reload" SvgIcon="{StaticResource svgRefresh}" />
+                                    <wq:MenuElement IsEnabled="{Binding Path=IsConnectioning,Converter={StaticResource boolFlipsConvert}}" Click="MenuElement_Server_Click" IcoBrush="{StaticResource primaryBrush}" Header="Edit" SvgIcon="{StaticResource svgEdit}" />
+                                    <wq:MenuElement IsEnabled="{Binding Path=IsConnectioning,Converter={StaticResource boolFlipsConvert}}" Click="MenuElement_Server_Click" IcoBrush="{StaticResource redBrush}" Header="Delete" SvgIcon="{StaticResource svgDelete}" />
                                 </ContextMenu>
                             </Border.ContextMenu>
                         </Border>
@@ -75,9 +75,9 @@
                                 <TextBlock Margin="4 0 0 0" Foreground="{DynamicResource icoNormalBrush}" Text="{Binding Path = KeyCount, StringFormat='({0})'}" />                               
                             </StackPanel>
                             <Border.ContextMenu>
-                                <ContextMenu>
-                                    <wq:MenuElement IcoBrush="{StaticResource primaryBrush}" Header="Add key" SvgIcon="{StaticResource svgAddKey}" />
-                                    <wq:MenuElement IcoBrush="{StaticResource primaryBrush}" Header="Reload" SvgIcon="{StaticResource svgRefresh}" />
+                                <ContextMenu Tag="{Binding ParentServer}">
+                                    <wq:MenuElement Click="MenuElement_Database_Click" IcoBrush="{StaticResource primaryBrush}" Header="Add key" SvgIcon="{StaticResource svgAddKey}" />
+                                    <wq:MenuElement Click="MenuElement_Database_Click" IcoBrush="{StaticResource primaryBrush}" Header="Reload" SvgIcon="{StaticResource svgRefresh}" />
                                 </ContextMenu>
                             </Border.ContextMenu>
                         </Border>
@@ -85,7 +85,7 @@
                 </TreeView.Resources>
                 <TreeView.ContextMenu>
                     <ContextMenu>
-                        <wq:MenuElement IcoBrush="{StaticResource primaryBrush}" Header="Add connection" SvgIcon="{StaticResource svgServerAdd}" />
+                        <wq:MenuElement IcoBrush="{StaticResource primaryBrush}" Header="Add connection" SvgIcon="{StaticResource svgServerAdd}" Click="MenuElement_Box_Click" />
                     </ContextMenu>
                 </TreeView.ContextMenu>
             </TreeView>

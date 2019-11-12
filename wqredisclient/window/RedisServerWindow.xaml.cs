@@ -14,21 +14,24 @@ using System.Windows.Shapes;
 using wqredisclient.entity;
 using wqredisclient.common;
 using wqredisclient.components;
+using System.Threading;
+using CSRedis;
 
 namespace wqredisclient.window
 {
     /// <summary>
-    /// RedisServerWindow.xaml 的交互逻辑
+    /// RedisServerWindow.xaml
     /// </summary>
     public partial class RedisServerWindow : Window
     {
         private RedisConnection redisConnection;
         private bool isNew = true;
-     
+        private RedisClient testClient;
+        private log4net.ILog log = log4net.LogManager.GetLogger("RedisServerWindow.xaml.cs");
         public RedisServerWindow()
         {
             InitializeComponent();
-            redisConnection = new RedisConnection();            
+            redisConnection = new RedisConnection();
         }
         public RedisServer Server { get; set; }
 
@@ -102,5 +105,79 @@ namespace wqredisclient.window
                 Console.WriteLine("false");
             }
         }
+
+        /// <summary>
+        /// test connection event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnTest_Click(object sender, RoutedEventArgs e)
+        {
+            if (CompontentUtils.vaildInputBox(host) && CompontentUtils.vaildInputBox(port) && CompontentUtils.vaildInputBox(connectionTimeout))
+            {
+                string host = redisConnection.Host;
+                int port = Convert.ToInt32(redisConnection.Port);
+                int timeout = Convert.ToInt32(redisConnection.ConnectionTimeOut);
+                testClient = new RedisClient(host, port);
+                testClient.Connected += TestClient_Connected;
+                ThreadStart threadStart = new ThreadStart(()=> {
+                    testConnection(timeout);
+                });
+                new Thread(threadStart).Start();
+            }
+            
+        }
+        /// <summary>
+        /// test connection
+        /// </summary>
+        /// <param name="timeout"></param>
+        private void testConnection(int timeout)
+        {
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                btnTest.IsEnabled = false;
+                btnTest.IsLoading = true;
+
+            }));
+            try
+            {
+                testClient.Connect(timeout);
+            }
+            catch(Exception e)
+            {
+                log.Error(e.Message);
+                this.Dispatcher.Invoke(new Action(delegate
+                {
+                    btnTest.IsLoading = false;
+                    btnTest.IsEnabled = true;
+
+                }));
+                MessageBox.Show("failed", "test connection failed...", MessageBoxButton.OK,MessageBoxImage.Warning);
+            }
+        }
+        /// <summary>
+        /// connected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TestClient_Connected(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                btnTest.IsLoading = false;
+                btnTest.IsEnabled = true;
+
+            }));
+            if (testClient.IsConnected)
+            {
+                MessageBox.Show("successful connection", "successful connection to redis-server", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("failed", "test connection failed...", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        
     }
 }

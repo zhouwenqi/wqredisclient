@@ -24,11 +24,15 @@ namespace wqredisclient.common
             App.redisServers.Add(redisServer);
             return redisServer;
         }
+        /// <summary>
+        /// update serdis-server info
+        /// </summary>
+        /// <param name="redisServer"></param>
+        /// <param name="connection"></param>
         public static void updateConnection(RedisServer redisServer, RedisConnection connection)
         {
             redisServer.Connection = connection;
-            redisServer.RedisClient = new RedisClient(redisServer.Connection.Host, Convert.ToInt32(redisServer.Connection.Port));
-            
+            redisServer.RedisClient = new RedisClient(connection.Host, Convert.ToInt32(connection.Port));            
             redisServer.RedisClient.Encoding = Encoding.UTF8;
         }
         /// <summary>
@@ -47,6 +51,10 @@ namespace wqredisclient.common
             }
             return null;
         }
+        /// <summary>
+        /// delete redis-server
+        /// </summary>
+        /// <param name="hashCode"></param>
         public static void deleteRedisConnection(int hashCode)
         {
             for(int i=App.config.RedisConnections.Count - 1; i >= 0; i--)
@@ -58,6 +66,7 @@ namespace wqredisclient.common
                 }
             }
         }
+
         /// <summary>
         /// get redis-server by client
         /// </summary>
@@ -103,6 +112,17 @@ namespace wqredisclient.common
                 return 0;
             }
             return Convert.ToInt16(config[0].Item2);
+        }
+        public static RedisDatabase getDatabase(RedisServer redisServer, string dbName)
+        {
+            foreach(RedisDatabase database in redisServer.Databases)
+            {
+                if (dbName.Equals(database.Name))
+                {
+                    return database;
+                }
+            }
+            return null;
         }
     }
 }

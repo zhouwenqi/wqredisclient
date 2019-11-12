@@ -18,6 +18,7 @@ using System.Threading;
 using System.Collections;
 using wqredisclient.components;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace wqredisclient.window
 {
@@ -46,11 +47,7 @@ namespace wqredisclient.window
         {
             App.config.RedisConnections.ForEach((connection) => {                
                 RedisUtils.addConnection(connection);
-            });    
-            for(int i=0;i<App.redisServers.Count;i++)
-            {
-                App.redisServers[i].RedisClient.Connected += RedisClient_Connected;
-            }
+            });   
 
             redisServerBox.Items.Clear();
             this.Dispatcher.Invoke(new Action(delegate
@@ -109,7 +106,9 @@ namespace wqredisclient.window
                 try
                 {
                     int connectionTimeOut = Convert.ToInt32(redisServer.Connection.ConnectionTimeOut);
-                    Console.WriteLine("host:"+redisClient.Host+",port:" + redisClient.Port);
+                    Debug.WriteLine("host:"+redisClient.Host+",port:" + redisClient.Port);
+                    redisClient.Connected -= RedisClient_Connected;
+                    redisClient.Connected += RedisClient_Connected;
                     redisClient.Connect(connectionTimeOut);
                 }catch(Exception e)
                 {
@@ -153,7 +152,7 @@ namespace wqredisclient.window
             {
                 redisClient.Auth(redisServer.Connection.Auth);
             }
-            Console.WriteLine("connection success...");
+            Debug.WriteLine("connection success...");
             int dbCount = RedisUtils.getDatabasesCount(redisClient);
             ObservableCollection<RedisDatabase> databases = new ObservableCollection<RedisDatabase>();
             for (int i = 0; i < dbCount; i++)
@@ -258,6 +257,8 @@ namespace wqredisclient.window
                 return;
             }
             TreeViewItem viewItem = (TreeViewItem)redisServerBox.ItemContainerGenerator.ContainerFromItem(redisServer);
+            viewItem.IsSelected = true;
+            
             switch (item.Header.ToString())
             {
                 case "Connection":
@@ -278,12 +279,45 @@ namespace wqredisclient.window
                     RedisServerWindow editServerWindow = new RedisServerWindow();
                     RedisConnection conn = (RedisConnection)redisServer.Connection.Clone();
                     editServerWindow.Server = redisServer;                    
-                    editServerWindow.ShowDialog();                   
-                    break;
+                    editServerWindow.ShowDialog();
+                    break;                
                 default:
                     break;                
             }
         }
+        private void MenuElement_Database_Click(object sender, RoutedEventArgs e)
+        {
+            MenuElement item = (MenuElement)sender;
+            ContextMenu menu = (ContextMenu)item.Parent;
+            RedisServer redisServer = (RedisServer)menu.Tag;
+            Border border = (Border)menu.PlacementTarget;
+            if (null == redisServer)
+            {
+                return;
+            }
+            RedisDatabase redisDatabase = RedisUtils.getDatabase(redisServer, border.ToolTip.ToString());
+
+            TreeViewItem viewItem = (TreeViewItem)redisServerBox.ItemContainerGenerator.ContainerFromItem(redisDatabase);
+            
+            viewItem.IsSelected = true;
+
+        }
+
+
+        private void MenuElement_Box_Click(object sender, RoutedEventArgs e)
+        {
+            MenuElement menu = (MenuElement)sender;
+            switch (menu.Header.ToString())
+            {
+                case "Add connection":
+                    RedisServerWindow redisServerWindow = new RedisServerWindow();
+                    redisServerWindow.ShowDialog();
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void redisRestconnection(RedisServer redisServer)
         {
             redisServer.IsConnectioning = true;
