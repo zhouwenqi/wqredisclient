@@ -76,6 +76,7 @@ namespace wqredisclient.window
                 if (!redisServer.RedisClient.IsConnected)
                 {
                     redisServer.IsConnectioning = true;
+                    RedisKeyUtils.sp = redisServer.Connection.KeySeparator.ToCharArray();
                     ThreadStart threadStart = new ThreadStart(() =>
                     {
                         redisConnecton(redisServer);
@@ -91,7 +92,12 @@ namespace wqredisclient.window
                     getKeys(currentRedisDatabase);
                 });
                 new Thread(threadStart).Start();
-            }            
+            }
+
+            this.btnAddKey.Dispatcher.Invoke(new Action(delegate
+            {
+                this.btnAddKey.IsEnabled = false;
+            }));
         }
 
         /// <summary>
@@ -99,7 +105,7 @@ namespace wqredisclient.window
         /// </summary>
         /// <param name="redisServer"></param>
         private void redisConnecton(RedisServer redisServer)
-        {
+        {            
             CSRedis.RedisClient redisClient = redisServer.RedisClient;  
             if (!redisClient.IsConnected)
             {
@@ -124,7 +130,7 @@ namespace wqredisclient.window
         /// </summary>
         /// <param name="redisDatabase"></param>
         private void getKeys(RedisDatabase redisDatabase)
-        {                     
+        {
             CSRedis.RedisClient redisClient = redisDatabase.ParentServer.RedisClient;
             redisClient.Call("SELECT "+redisDatabase.Id);
             string[] keys = redisClient.Keys(redisDatabase.ParentServer.Connection.KeyPattern);
@@ -134,13 +140,13 @@ namespace wqredisclient.window
             if (keys.Length > 0)
             {
                 Array.Sort(keys);
-                redisKeys = RedisKeyUtils.getSplitKeys(keys,null);
+                redisKeys = RedisKeyUtils.getSplitKeys(keys,null);                
             }            
             this.Dispatcher.Invoke(new Action(delegate
             {
                 redisKeysBox.ItemsSource = redisKeys;
-            }));
-
+                this.btnAddKey.IsEnabled = true;
+            })); 
         }
 
         private void RedisClient_Connected(object sender, EventArgs e)
@@ -172,16 +178,26 @@ namespace wqredisclient.window
             }));
         }
 
-        private void checkTheme_Click(object sender, RoutedEventArgs e)
-        {
 
+        /// <summary>
+        /// set button enabled status
+        /// </summary>
+        /// <param name="isSelected"></param>
+        private void setKeySelectStatus(bool isSelected)
+        {  
+            inputKey.IsEnabled = isSelected;
+            viewType.IsEnabled = isSelected;
+            inputValue.IsEnabled = isSelected;
+            btnKeyGroup.IsEnabled = isSelected;
         }
 
         private void redisKeysBox_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
+        {            
             RedisKey redisKey = (RedisKey)e.NewValue;
             if(redisKey == null)
             {
+                currentRedisKey = null;
+                setKeySelectStatus(false);
                 return;
             }
             if (redisKey.Keys.Count == 0)
@@ -196,28 +212,57 @@ namespace wqredisclient.window
         private void getKeyValue(RedisKey redisKey)
         {
             currentRedisKey = redisKey;
-            CSRedis.RedisClient redisClient = currentRedisDatabase.ParentServer.RedisClient;            
-            string value = redisClient.Get(currentRedisKey.Key);
-            this.inputKey.Dispatcher.Invoke(new Action(delegate
+            try
             {
-                inputKey.Text = currentRedisKey.Key;
-            }));
-            this.inputValue.Dispatcher.Invoke(new Action(delegate
+                CSRedis.RedisClient redisClient = currentRedisDatabase.ParentServer.RedisClient;
+                string value = redisClient.Get(currentRedisKey.Key);
+                this.Dispatcher.Invoke(new Action(delegate
+                {
+                    inputKey.Text = currentRedisKey.Key;
+                    inputValue.Text = value;
+                    setKeySelectStatus(true);
+                }));
+            }
+            catch(Exception e)
             {
-                inputValue.Text = value;
-            }));
+                log.Error(e.Message);
+                setKeySelectStatus(false);
+            }
+            
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            if(inputKey.VaildStatus != InputVaildStatus.No)
+            string key = inputKey.Text;
+            string value = inputValue.Text;
+            if (string.IsNullOrEmpty(key))
             {
-                inputKey.VaildStatus = InputVaildStatus.No;
-            }else
-            {
-                inputKey.VaildStatus = InputVaildStatus.Yes;
+                inputValue.VaildStatus = InputVaildStatus.No;
+                return;
             }
-            
+            else
+            {
+                inputValue.VaildStatus = InputVaildStatus.None;
+            }
+            if (string.IsNullOrEmpty(value))
+            {
+                inputValue.VaildStatus = InputVaildStatus.No;
+                return;
+            }
+            else
+            {
+                inputValue.VaildStatus = InputVaildStatus.None;
+            }
+            ThreadStart threadStart = new ThreadStart(() =>
+            {
+                string newKey = null;
+                if (!key.Equals(currentRedisKey.Key))
+                {
+                    newKey = key;
+                }
+                saveKeyValue(currentRedisKey.Key, newKey, value);
+            });
+            new Thread(threadStart).Start();            
         }
 
         /// <summary>
@@ -285,23 +330,6 @@ namespace wqredisclient.window
                     break;                
             }
         }
-        private void MenuElement_Database_Click(object sender, RoutedEventArgs e)
-        {
-            MenuElement item = (MenuElement)sender;
-            ContextMenu menu = (ContextMenu)item.Parent;
-            RedisServer redisServer = (RedisServer)menu.Tag;
-            Border border = (Border)menu.PlacementTarget;
-            if (null == redisServer)
-            {
-                return;
-            }
-            RedisDatabase redisDatabase = RedisUtils.getDatabase(redisServer, border.ToolTip.ToString());
-
-            TreeViewItem viewItem = (TreeViewItem)redisServerBox.ItemContainerGenerator.ContainerFromItem(redisDatabase);
-            
-            viewItem.IsSelected = true;
-
-        }
 
 
         private void MenuElement_Box_Click(object sender, RoutedEventArgs e)
@@ -317,13 +345,23 @@ namespace wqredisclient.window
                     break;
             }
         }
-
+        /// <summary>
+        /// rest connection
+        /// </summary>
+        /// <param name="redisServer"></param>
         private void redisRestconnection(RedisServer redisServer)
         {
             redisServer.IsConnectioning = true;
-            if (redisServer.RedisClient.IsConnected)
+            try
             {
-                redisServer.RedisClient.Quit();
+                if (redisServer.RedisClient.IsConnected)
+                {
+                    redisServer.RedisClient.Quit();
+                }
+            }
+            catch(Exception e)
+            {
+                log.Error("server connection quit error:"+e.Message);
             }
            
             ThreadStart threadStart = new ThreadStart(() =>
@@ -332,12 +370,23 @@ namespace wqredisclient.window
             });
             new Thread(threadStart).Start();
         }
+        /// <summary>
+        /// quit connection
+        /// </summary>
+        /// <param name="redisServer"></param>
         private void redisQuitConnection(RedisServer redisServer)
         {
-            if (redisServer.RedisClient.IsConnected)
+            try
             {
-                redisServer.RedisClient.Quit();
-                redisServer.Databases.Clear();
+                if (redisServer.RedisClient.IsConnected)
+                {
+                    redisServer.RedisClient.Quit();
+                    redisServer.Databases.Clear();
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("server connection quit error:" + e.Message);
             }
             redisServer.IsConnectioned = redisServer.RedisClient.IsConnected;
         }
@@ -352,6 +401,34 @@ namespace wqredisclient.window
                     redisServer.RedisClient.Dispose();
                 }
                 redisConnecton(redisServer);
+            }
+        }
+        private void saveKeyValue(string key,string newKey,string value)
+        {
+            Debug.WriteLine("key:" + key + ",value:" + value);
+            try
+            {
+                if (currentRedisDatabase == null || currentRedisKey == null)
+                {
+                    return;
+                }
+                CSRedis.RedisClient redisClient = currentRedisDatabase.ParentServer.RedisClient;
+                redisClient.Call("SELECT " + currentRedisDatabase.Id);
+                if (string.IsNullOrEmpty(newKey))
+                {
+                    redisClient.Set(key, value);                    
+                }
+                else
+                {
+                    redisClient.Rename(key, newKey);
+                    redisClient.Set(newKey, value);
+                    getKeys(currentRedisDatabase);
+                }
+                MessageBox.Show("set successfly", "success", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            catch (Exception e)
+            {
+                log.Error("save faild:" + e.Message);
             }
         }
         

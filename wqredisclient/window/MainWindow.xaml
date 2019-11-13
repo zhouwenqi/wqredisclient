@@ -66,20 +66,14 @@
                         </Border>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type et:RedisDatabase}">
-                        <Border ToolTip="{Binding Name}" Style="{StaticResource treeViewBorderStyle}">
+                        <Border Style="{StaticResource treeViewBorderStyle}">
                             <StackPanel Width="auto" Height="auto" Orientation="Horizontal" Margin="24 0 0 0">
                                 <Path Margin="0 0 8 0" Width="14" Height="14" Fill="{Binding Path=KeyCount,Converter={StaticResource countBrushConvert}}" Data="{StaticResource svgDatabase}" Stretch="Fill">
                                     
                                 </Path>
                                 <TextBlock x:Name="dbName" Text="{Binding Name}" />
                                 <TextBlock Margin="4 0 0 0" Foreground="{DynamicResource icoNormalBrush}" Text="{Binding Path = KeyCount, StringFormat='({0})'}" />                               
-                            </StackPanel>
-                            <Border.ContextMenu>
-                                <ContextMenu Tag="{Binding ParentServer}">
-                                    <wq:MenuElement Click="MenuElement_Database_Click" IcoBrush="{StaticResource primaryBrush}" Header="Add key" SvgIcon="{StaticResource svgAddKey}" />
-                                    <wq:MenuElement Click="MenuElement_Database_Click" IcoBrush="{StaticResource primaryBrush}" Header="Reload" SvgIcon="{StaticResource svgRefresh}" />
-                                </ContextMenu>
-                            </Border.ContextMenu>
+                            </StackPanel>                            
                         </Border>
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
@@ -122,15 +116,15 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <wq:InputBox Grid.Column="0" x:Name="inputKey" IsNeedInput="True" Ico="{StaticResource svgKey}" Title="input key" />
-                <ComboBox SelectedIndex="0" Grid.Column="1" Margin="10 0 0 0">
+                <wq:InputBox IsEnabled="False" Grid.Column="0" x:Name="inputKey" IsNeedInput="True" Ico="{StaticResource svgKey}" Title="input key" />
+                <ComboBox IsEnabled="False" x:Name="viewType" SelectedIndex="0" Grid.Column="1" Margin="10 0 0 0">
                     <ComboBoxItem>Text plain</ComboBoxItem>
                     <ComboBoxItem>Json</ComboBoxItem>
                     <ComboBoxItem>Hex</ComboBoxItem>
                 </ComboBox>
             </Grid>
             <Grid Margin="10 0 10 10" Grid.Row="1">
-                <wq:TextareaBox x:Name="inputValue" Title="input value" IsNeedInput="True" />                
+                <wq:TextareaBox IsEnabled="False" x:Name="inputValue" Title="input value" IsNeedInput="True" />                
             </Grid>
             <Grid Margin="10 0 10 10" Grid.Row="2">
                 <Grid.ColumnDefinitions>
@@ -138,12 +132,12 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <StackPanel Height="38" Orientation="Horizontal">
-                    <wq:IcoButton x:Name="btnAddKey" Style="{StaticResource primaryButtonStyle}" Ico="{StaticResource svgAddKey}">Add key</wq:IcoButton>
+                    <wq:IcoButton IsEnabled="False" x:Name="btnAddKey" Style="{StaticResource primaryButtonStyle}" Ico="{StaticResource svgAddKey}">Add key</wq:IcoButton>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Height="38" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <wq:IcoButton x:Name="btnRefreshKey" Style="{StaticResource normalButtonStyle}" Ico="{StaticResource svgRefresh}">Reload</wq:IcoButton>
+                <StackPanel IsEnabled="False" x:Name="btnKeyGroup" Grid.Column="1" Height="38" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <wq:IcoButton Click="btnSave_Click" x:Name="btnRefreshKey" Style="{StaticResource normalButtonStyle}" Ico="{StaticResource svgRefresh}">Reload</wq:IcoButton>
                     <wq:IcoButton Margin="10 0 0 0" x:Name="btnDeleteKey" Style="{StaticResource normalButtonStyle}" Ico="{StaticResource svgDelete}">Delete</wq:IcoButton>
-                    <wq:IcoButton Margin="10 0 0 0" x:Name="btnSaveKey" Style="{StaticResource normalButtonStyle}" Ico="{StaticResource svgSave}">Save</wq:IcoButton>
+                    <wq:IcoButton Click="btnSave_Click" Margin="10 0 0 0" x:Name="btnSaveKey" Style="{StaticResource normalButtonStyle}" Ico="{StaticResource svgSave}">Save</wq:IcoButton>
                 </StackPanel>
             </Grid>
         </Grid>

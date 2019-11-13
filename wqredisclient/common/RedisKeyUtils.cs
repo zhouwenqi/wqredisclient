@@ -68,14 +68,19 @@ namespace wqredisclient.common
         {
             Dictionary<string, HashSet<String>> dicKeys = new Dictionary<string, HashSet<String>>();
             ObservableCollection<RedisKey> redisKeys = new ObservableCollection<RedisKey>();
+            if(keys == null)
+            {
+                return redisKeys;
+            }
             if (keys.Length > 0)
             {
                 foreach (string key in keys)
                 {
                     if (string.IsNullOrEmpty(key))
                     {
-                        break;
+                        continue;
                     }
+                    
                     string[] str = key.Split(sp, 2, StringSplitOptions.None);
                     string k = str[0];
                     string v = str.Length > 1 ? str[1] : null;
@@ -94,7 +99,7 @@ namespace wqredisclient.common
                         redisKey.Key = item.Key;
                     }else
                     {
-                        redisKey.Key = prevKey + ":" + item.Key;
+                        redisKey.Key = prevKey + new String(sp) + item.Key;
                     }
                     if (item.Value != null && item.Value.Count > 0)
                     {
@@ -106,6 +111,18 @@ namespace wqredisclient.common
                 }
             }
             return redisKeys;
+        }
+        public static string getKeyName(string key)
+        {
+            string[] keys = key.Split(sp);
+            if(keys == null)
+            {
+                return key;
+            }
+            else
+            {
+                return keys[keys.Length - 1];
+            }
         }
 
     }
