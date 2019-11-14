@@ -55,7 +55,13 @@ namespace wqredisclient.window
                 redisServerBox.ItemsSource = App.redisServers;
             }));
 
-            
+            ComboBoxItem viewTypText = new ComboBoxItem();
+            viewTypText.Content = "Text plain";
+            ComboBoxItem viewTypeJson = new ComboBoxItem();
+            viewTypeJson.Content = "Json";
+            viewType.Items.Add(viewTypText);
+            viewType.Items.Add(viewTypeJson);
+            viewType.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -135,6 +141,7 @@ namespace wqredisclient.window
             redisClient.Call("SELECT "+redisDatabase.Id);
             string[] keys = redisClient.Keys(redisDatabase.ParentServer.Connection.KeyPattern);
             char[] splits = redisDatabase.ParentServer.Connection.KeySeparator.ToCharArray();
+            
             redisDatabase.KeyCount = keys.Length;
             ObservableCollection<RedisKey> redisKeys = new ObservableCollection<RedisKey>();
             if (keys.Length > 0)
@@ -184,11 +191,15 @@ namespace wqredisclient.window
         /// </summary>
         /// <param name="isSelected"></param>
         private void setKeySelectStatus(bool isSelected)
-        {  
-            inputKey.IsEnabled = isSelected;
-            viewType.IsEnabled = isSelected;
-            inputValue.IsEnabled = isSelected;
-            btnKeyGroup.IsEnabled = isSelected;
+        {
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                inputKey.IsEnabled = isSelected;
+                viewType.IsEnabled = isSelected;
+                inputValue.IsEnabled = isSelected;
+                btnKeyGroup.IsEnabled = isSelected;
+            }));
+            
         }
 
         private void redisKeysBox_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -213,15 +224,20 @@ namespace wqredisclient.window
         {
             currentRedisKey = redisKey;
             try
-            {
-                CSRedis.RedisClient redisClient = currentRedisDatabase.ParentServer.RedisClient;
-                string value = redisClient.Get(currentRedisKey.Key);
+            {               
+                this.inputKey.Dispatcher.Invoke(new Action(delegate
+                {
+                    inputKey.Text = currentRedisKey.Key;                 
+                }));
+                
                 this.Dispatcher.Invoke(new Action(delegate
                 {
-                    inputKey.Text = currentRedisKey.Key;
-                    inputValue.Text = value;
-                    setKeySelectStatus(true);
+                    Debug.WriteLine("item:" + viewType.SelectedIndex);
+                    ComboBoxItem item = (ComboBoxItem)viewType.SelectedItem;
+                    inputValue.Text = getFormatValue(item.Content.ToString());
                 }));
+
+                setKeySelectStatus(true);
             }
             catch(Exception e)
             {
@@ -431,6 +447,75 @@ namespace wqredisclient.window
                 log.Error("save faild:" + e.Message);
             }
         }
-        
+
+        /// <summary>
+        /// value format
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param> 
+        private void viewType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            ComboBoxItem item = (ComboBoxItem)comboBox.SelectedItem;
+            this.inputValue.Dispatcher.Invoke(new Action(delegate
+            {
+                inputValue.Text = getFormatValue(item.Content.ToString());
+            }));
+        }
+        private string getFormatValue(string type)
+        {            
+            string text = "";
+            if (currentRedisDatabase == null)
+            {
+                return "";
+            }
+            CSRedis.RedisClient redisClient = currentRedisDatabase.ParentServer.RedisClient;
+            string key = currentRedisKey.Key;
+            string[] fields = null;
+            try
+            {
+                fields = redisClient.HKeys(key);
+            }catch(Exception e)
+            {
+                log.Error(e.Message);
+            }
+            
+            string field = fields != null && fields.Length > 0 ? fields[0] : null;
+            if (field != null)
+            {
+                text = redisClient.HGet(key, field);
+            }
+            else
+            {
+                text = redisClient.Get(key);
+            }
+            Debug.WriteLine("json:" + text);
+            switch (type)
+            {
+                case "Json":
+                    try
+                    {
+                        JsonSerializer jsonSerializer = new JsonSerializer();
+                        System.IO.StringWriter stringWriter = new System.IO.StringWriter();
+                        JsonTextWriter jsonTextWriter = new JsonTextWriter(stringWriter);
+                        jsonTextWriter.Formatting = Formatting.Indented;
+                        jsonTextWriter.Indentation = 4;
+                        jsonTextWriter.IndentChar = ' ';
+                        object jsonObj = JsonConvert.DeserializeObject(text);
+                        jsonSerializer.Serialize(jsonTextWriter, jsonObj);
+                        text = stringWriter.ToString();
+                        stringWriter.Close();
+                        jsonTextWriter.Close();
+                    }catch(Exception e)
+                    {
+                        log.Error("json serialize faild ["+e.Message+"]");                        
+                    }
+                    
+                    break;
+                default:
+                    break;
+            }
+            return text;
+        }
     }
 }

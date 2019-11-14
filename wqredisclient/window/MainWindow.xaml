@@ -117,10 +117,8 @@
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <wq:InputBox IsEnabled="False" Grid.Column="0" x:Name="inputKey" IsNeedInput="True" Ico="{StaticResource svgKey}" Title="input key" />
-                <ComboBox IsEnabled="False" x:Name="viewType" SelectedIndex="0" Grid.Column="1" Margin="10 0 0 0">
-                    <ComboBoxItem>Text plain</ComboBoxItem>
-                    <ComboBoxItem>Json</ComboBoxItem>
-                    <ComboBoxItem>Hex</ComboBoxItem>
+                <ComboBox Selector.SelectionChanged="viewType_SelectionChanged" IsEnabled="False" x:Name="viewType" SelectedIndex="0" Grid.Column="1" Margin="10 0 0 0">
+                    
                 </ComboBox>
             </Grid>
             <Grid Margin="10 0 10 10" Grid.Row="1">
